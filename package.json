@@ -1,0 +1,26 @@
+{
+  "name": "hackupc2018fall",
+  "version": "1.0.0",
+  "description": "A time game",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tarasyarema/hackupc2018fall.git"
+  },
+  "keywords": [
+    "game",
+    "time"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tarasyarema/hackupc2018fall/issues"
+  },
+  "homepage": "https://github.com/tarasyarema/hackupc2018fall#readme",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
