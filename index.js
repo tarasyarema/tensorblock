@@ -5,7 +5,11 @@ var express = require('express');
 var app = express();
 
 app.get('/', function (req, res) {
-	res.sendFile(__dirname + '/views/index.html');
+    res.sendFile(__dirname + '/views/index.html');
+});
+
+app.get('/game', function (req, res) {
+    res.sendFile(__dirname + '/views/game.html');
 });
 
 app.listen(3000, function () {
