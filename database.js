@@ -10,39 +10,13 @@ var user = new mongoose.Schema({
         required: true,
         unique: true
     },
-    password:{
-        type: String,
-        required: true
+    level: {
+        type: Number
     },
-    public_key: String,
-    private_key: String,
-    promises: 0
-});
-
-var promise = new mongoose.Schema({
-    //timestamp: Number,
-    date: Date,
-    emiter: {
-        type: String,
-        required: true
-    },
-    destination: {
-        type: String,
-        required: true
-    },
-    promise: {
-        type: String,
-        required: true
-    },
-    emiter_sign: {
-        type: String,
-        required: true
-    },
-    destination_sign: String,
-    valid: Boolean
+    time: {
+        type: Number
+    }
 });
 
 var User = mongoose.model('User', user);
-var Promise = mongoose.model('Promise', promise);
-
-module.exports = {User, Promise};
+module.exports = { User };
