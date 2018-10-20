@@ -8,28 +8,18 @@ function register_run(Cube) {
     CURRENT_MOVEMENTS = [[Cube.x, Cube.y, Cube.vx, Cube.vy]];
     START_TIME = Date.now();
 
-    // Reset grabbable objects.
-    for (var i = 0; i < BARS.length; ++i)
-        GRABBABLE_OBJECTS[i] = BARS[i];
-
     // Reset Grabbable objects.
-    var pos;
-    var x;
-    var y;
-    var w;
     for (i = 0; i < BAR_SHAPES.length; ++i) {
-        pos = BAR_SHAPES[i];
-        x = pos[0];
-        y = pos[1];
-        w = pos[2];
-        BARS[i].position.set(x, y);
-        BARS[i].shape.width.set(w);
-        GRABBABLE_OBJECTS[i] = BARS[i]
+        let pos = BAR_SHAPES[i];
+        BARS[i].position.set(pos[0], pos[1], Cube.z);
+        BARS[i].shape.width.set(pos[2]);
+        GRABBABLE_OBJECTS[i] = BARS[i];
     }
+
     GRABBED_OBJECT = null;
 }
 
-function enable_event_listener(){
+function enable_event_listener() {
     EVENT_LISTENERS_ENABLED = true;
 }
 
@@ -38,7 +28,7 @@ function run_future(Cube, scene) {
     //If there are NO registered movements then you are a noob and you have lost.
     if (REGISTERED_MOVEMENTS.length === 0) {
         printCombo(0, 0, 0, 'LOSER', scene, 0xffe131);
-        return 0
+        return 0;
     }
 
     // Get last registered movement.
@@ -46,24 +36,19 @@ function run_future(Cube, scene) {
 
     // Get initial position.
     var pos = last_movements[0];
-    var x = pos[0];
-    var y = pos[1];
-    var vx = pos[2];
-    var vy = pos[3];
-    Cube.mat.position.set(x, y, 0);
-    Cube.x = x;
-    Cube.y = y;
-    Cube.vx = vx;
-    Cube.vy = vy;
+    Cube.mat.position.set(pos[0], pos[1], 0);
+    Cube.x = pos[0];
+    Cube.y = pos[1];
+    Cube.vx = pos[2];
+    Cube.vy = pos[3];
 
-    var aux;
-    var time_delta = 0;
-    var func;
-    for (var i = 1; i < last_movements.length; i++) {
-        aux = last_movements[i];
-        time_delta = aux[0];
-        func = aux[1];
+    var func, time_delta = 0;
+
+    for (var i = 1; i < last_movements.length; ++i) {
+        time_delta = last_movements[i][0];
+        func = last_movements[i][1];
         setTimeout(func, time_delta, Cube);
     }
+
     setTimeout(enable_event_listener, time_delta)
 }

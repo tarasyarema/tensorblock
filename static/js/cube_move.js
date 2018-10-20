@@ -5,7 +5,7 @@ const SPEED = 0.4;
 const VERTICAL_SPEED = 1.2;
 const GRAVITY = -0.08;
 const CUBE_COLOR = 0xff710d;
-const MIN_HEIGHT = -1000;
+const MIN_HEIGHT = -100;
 
 var WIN = false;
 var TIME;
@@ -107,17 +107,14 @@ function update_cube(Cube, level, scene){
     }
 
     var is_on_platform = false;
-    var platform;
-    var xmin;
-    var xmax;
-    var ymax;
-    var ymin;
+
     for (var i=0; i< platforms.length; i++){
-        platform = platforms[i];
-        xmin = platform[0] - platform[2]/2;
-        xmax = platform[0] + platform[2]/2;
-        ymax = platform[1] + PLATFORM_Y/2;
-        ymin = platform[1] - PLATFORM_Y/2;
+        let platform = platforms[i];
+        let xmin = platform[0] - platform[2]/2;
+        let xmax = platform[0] + platform[2]/2;
+        let ymax = platform[1] + PLATFORM_Y/2;
+        let ymin = platform[1] - PLATFORM_Y/2;
+
         if (Cube.x-Cube.d/2 <= xmax && Cube.x + Cube.d/2 >= xmin) {
             if (Cube.y - Cube.d / 2 <= ymax + EPSILON && Cube.y +Cube.d/2 >= ymin) {
 				if (Cube.vy <= 0) {
@@ -149,28 +146,28 @@ function update_cube(Cube, level, scene){
         }
     }
 
-    var portals = level.portal;
-    var portal;
-    for (var i=0; i < portals.length; i ++) {
-        portal = portals[i];
-        xmin = portal[0] - PORTAL_X / 2;
-        xmax = portal[0] + PORTAL_X / 2;
-        ymin = portal[1] - PORTAL_Y / 2;
-        ymax = portal[1] + PORTAL_Y / 2;
-        if (Cube.x - Cube.d / 2 <= xmax && Cube.x + Cube.d / 2 >= xmin &&
-            Cube.y - Cube.d / 2 <= ymax && Cube.y + Cube.d / 2 >= ymin) {
-            if ((Date.now() - START_TIME) >= MIN_INTER_TRAVEL_TIME) {
-                register_run(Cube);
-            }
+    let portal = level.portal;
+
+    xmin = portal[0] - PORTAL_X / 2;
+    xmax = portal[0] + PORTAL_X / 2;
+    ymin = portal[1] - PORTAL_Y / 2;
+    ymax = portal[1] + PORTAL_Y / 2;
+
+    if (Cube.x - Cube.d / 2 <= xmax && Cube.x + Cube.d / 2 >= xmin &&
+        Cube.y - Cube.d / 2 <= ymax && Cube.y + Cube.d / 2 >= ymin) {
+        if ((Date.now() - START_TIME) >= MIN_INTER_TRAVEL_TIME) {
+            console.log("Registering RUN!");
+            console.log({REGISTERED_MOVEMENTS, CURRENT_MOVEMENTS, EVENT_LISTENERS_ENABLED, GRABBABLE_OBJECTS, GRABBED_OBJECT});
+            register_run(Cube);
         }
     }
 
     //Store if the cube is on a platform or not.
     Cube.on_platform = is_on_platform;
 
-    if (is_on_platform) {
+    if (is_on_platform)
         Cube.vy = 0;
-    } else {
+    else {
         Cube.vy += GRAVITY;
         Cube.vy = Math.min(Cube.vy, VERTICAL_SPEED);
         Cube.vy = Math.max(Cube.vy, -VERTICAL_SPEED);
