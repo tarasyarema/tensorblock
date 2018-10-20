@@ -235,7 +235,8 @@ function update_cube(Cube, level, scene){
         if (REGISTERED_MOVEMENTS.length === 0 && WIN === false) {
             WIN = true;
             TIME = START_TIME - Date.now();
-            printCombo(0, 0, 0, 'WINNER', scene, 0x31ffe1)
+            printCombo(0, 0, 0, 'WINNER', scene, 0x31ffe1);
+            $('.levels).css('display','block');
         }
     }
 
