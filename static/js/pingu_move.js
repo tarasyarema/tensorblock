@@ -60,12 +60,12 @@ function print_pingu (x, y, z, pingu_fig, scene) {
     var grid = create_grid(pos[0], pos[1], pos[2], pingu_height, pingu_width);
 
     // Remove previous pingu print.
-    for (var box in pingu_boxes) {
-        scene.remove(box);
+    for (var i = 0; i < pingu_boxes.length; i++) {
+        scene.remove(pingu_boxes[i]);
     }
 
     pingu_boxes = [];
-    for (var i = 0; i < pingu_height; ++i) {
+    for (i = 0; i < pingu_height; ++i) {
         for (var j = 0; j < pingu_width; ++j) {
             if (pingu_fig[pingu_width*i + j]!==0x00000000){
                 pingu_boxes.push(create_cube(grid[j][i][0], grid[j][i][1], grid[j][i][2],
@@ -100,7 +100,7 @@ function start_pingu_still_left(scene) {
     pingu_index += 1;
     pingu_index = pingu_index % 2;
     if (pingu_still_left) {
-        setTimeout(start_pingu_still_left(scene), wait_period*(1 + pingu_index*2))
+        setTimeout(start_pingu_still_left, wait_period*(1 + pingu_index*2), scene)
     }
 }
 
@@ -112,7 +112,7 @@ function start_pingu_still_right(scene) {
     pingu_index += 1;
     pingu_index = pingu_index % 2;
     if (pingu_still_right) {
-        setTimeout(start_pingu_still_right(scene), wait_period*(1 + pingu_index*2))
+        setTimeout(start_pingu_still_right, wait_period*(1 + pingu_index*2), scene)
     }
 }
 
@@ -125,7 +125,7 @@ function start_pingu_move_left(scene) {
     pingu_index += 1;
     pingu_index = pingu_index % 3;
     if (pingu_move_left) {
-        setTimeout(start_pingu_move_left(scene), wait_period)
+        setTimeout(start_pingu_move_left, wait_period, scene)
     }
 }
 
@@ -138,7 +138,7 @@ function start_pingu_move_right(scene) {
     pingu_index += 1;
     pingu_index = pingu_index % 3;
     if (pingu_move_right) {
-        setTimeout(start_pingu_move_right(scene), wait_period)
+        setTimeout(start_pingu_move_right, wait_period, scene)
     }
 }
 
@@ -219,7 +219,7 @@ function init_scene(){
     pingu_move_left = false;
     pingu_index = 0;
     speed = 2;
-    wait_period = 200;
+    wait_period = 500;
 
 
     pingu_left_motion = [];
@@ -297,7 +297,6 @@ function init_scene(){
 
     // Print sample strings
 
-    console.log(scene);
     start_pingu_move(0, 0, 0, scene);
 
 
