@@ -11,6 +11,8 @@ const MIN_HEIGHT = -1000;
 var REGISTERED_MOVEMENTS = [];
 var CURRENT_MOVEMENTS = [];
 var START_TIME;
+var MIN_INTER_TRAVEL_TIME = 1000;
+var EVENT_LISTENERS_ENABLED = true;
 
 
 function key_down_left(Cube){
@@ -43,21 +45,21 @@ function key_down_listener(event, Cube) {
     key = event.key;
     // if left arrow key is pressed then , depending on 'ChangeYearOnKeyPress'
     // variable value we show previous page of bookmarks or of backgrounds
-    if (key === "ArrowLeft") {
+    if (key === "ArrowLeft" && EVENT_LISTENERS_ENABLED) {
         register_event(key_down_left);
         key_down_left(Cube);
     }
 
     // if right arrow key is pressed then , depending on 'ChangeYearOnKeyPress'
     // variable value we show next page of bookmarks or of backgrounds
-    if (key === "ArrowRight") {
+    if (key === "ArrowRight" && EVENT_LISTENERS_ENABLED) {
         register_event(key_down_right);
         key_down_right(Cube);
     }
 
     // if right arrow key is pressed then , depending on 'ChangeYearOnKeyPress'
     // variable value we show next page of bookmarks or of backgrounds
-    if (key === "ArrowUp") {
+    if (key === "ArrowUp" && EVENT_LISTENERS_ENABLED) {
         register_event(key_down_up);
         key_down_up(Cube)
     }
@@ -66,9 +68,9 @@ function key_down_listener(event, Cube) {
 
 
 function arrow_up(Cube) {
-    if (Cube.on_platform) {
+    //if (Cube.on_platform) {
         Cube.vx = 0;
-    }
+    //}
 }
 
 /**
@@ -80,7 +82,7 @@ function key_up_listener(event, Cube) {
     key = event.key;
     // if left arrow key is pressed then , depending on 'ChangeYearOnKeyPress'
     // variable value we show previous page of bookmarks or of backgrounds
-    if (key === "ArrowLeft" || key === "ArrowRight") {
+    if ((key === "ArrowLeft" || key === "ArrowRight")  && EVENT_LISTENERS_ENABLED) {
         register_event(arrow_up);
         arrow_up(Cube)
     }
@@ -109,21 +111,25 @@ function update_cube(Cube, level, scene){
         ymax = platform[1] + PLATFORM_Y/2;
         ymin = platform[1] - PLATFORM_Y/2;
         if (Cube.x-Cube.d/2 <= xmax && Cube.x + Cube.d/2 >= xmin) {
-            if (Cube.y - Cube.d / 2 <= ymax + EPSILON && Cube.y >= ymin) {
-                is_on_platform = true;
-                Cube.y = ymax + Cube.d / 2;
-				if(Cube.vy <= -0.5){
-					Cube.vx = 0;
+            if (Cube.y - Cube.d / 2 <= ymax + EPSILON && Cube.y +Cube.d/2 >= ymin) {
+				if(Cube.vy <= 0){
+					is_on_platform = true;
+					Cube.y = ymax + Cube.d / 2;
+				}else{
+					if(is_on_platform == false){
+						Cube.y = ymin - Cube.d / 2;
+						Cube.vy = 0;
+					}
 				}
             }
             else if (Math.max(Cube.y - Cube.d/2, ymin) <= Math.min(Cube.y + Cube.d/2, ymax)) {
-                if (Cube.vx >= 0) {
+                /**if (Cube.vx >= 0) {
                     Cube.x = xmin - Cube.d / 2;
                 }
                 else if (Cube.vx < 0) {
                     Cube.x = xmax + Cube.d / 2;
                 }
-                /**if (Cube.vy >= 0) {
+                if (Cube.vy >= 0) {
                     Cube.y = ymin - Cube.d / 2;
                 }
                 else if (Cube.vy < 0) {
@@ -135,15 +141,19 @@ function update_cube(Cube, level, scene){
         }
     }
 
-    var exit = level.exit;
-    xmin = exit[0] - EXIT_X/2;
-    xmax = exit[0] + EXIT_X/2;
-    ymin = exit[1] - EXIT_Y/2;
-    ymax = exit[1] + EXIT_Y/2;
-    if (Cube.x-Cube.d/2 <= xmax && Cube.x + Cube.d/2 >= xmin &&
-        Cube.y-Cube.d/2 <= ymax && Cube.y + Cube.d/2 >= ymin) {
-        if (REGISTERED_MOVEMENTS.length === 0) {
-            printCombo(0, 0, 0, 'WINNER', scene, 0x31ffe1)
+    var portals = level.portal;
+    var portal;
+    for (i=0; i < portals.length; i ++) {
+        portal = portals[i];
+        xmin = portal[0] - PORTAL_X / 2;
+        xmax = portal[0] + PORTAL_X / 2;
+        ymin = portal[1] - PORTAL_Y / 2;
+        ymax = portal[1] + PORTAL_Y / 2;
+        if (Cube.x - Cube.d / 2 <= xmax && Cube.x + Cube.d / 2 >= xmin &&
+            Cube.y - Cube.d / 2 <= ymax && Cube.y + Cube.d / 2 >= ymin) {
+            if ((Date.now() - START_TIME) >= MIN_INTER_TRAVEL_TIME) {
+                register_run(Cube);
+            }
         }
     }
 
@@ -160,6 +170,19 @@ function update_cube(Cube, level, scene){
     }
 
     Cube.mat.position.set(Cube.x, Cube.y, Cube.z);
+
+    var exit = level.exit;
+    xmin = exit[0] - EXIT_X/2;
+    xmax = exit[0] + EXIT_X/2;
+    ymin = exit[1] - EXIT_Y/2;
+    ymax = exit[1] + EXIT_Y/2;
+    if (Cube.x-Cube.d/2 <= xmax && Cube.x + Cube.d/2 >= xmin &&
+        Cube.y-Cube.d/2 <= ymax && Cube.y + Cube.d/2 >= ymin) {
+        if (REGISTERED_MOVEMENTS.length === 0) {
+            printCombo(0, 0, 0, 'WINNER', scene, 0x31ffe1)
+        }
+    }
+
 }
 
 function start_game(level){
@@ -192,7 +215,7 @@ function start_game(level){
     scene.add(Cube.mat);
 
     START_TIME = Date.now();
-    CURRENT_MOVEMENTS.push([Cube.x, Cube.y]);
+    CURRENT_MOVEMENTS.push([Cube.x, Cube.y, Cube.vx, Cube.vy]);
 
     //Add event listeners for cube moving.
     document.addEventListener('keydown', function (event){
