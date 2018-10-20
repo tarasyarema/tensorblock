@@ -7,7 +7,8 @@ const GRAVITY = -0.08;
 const CUBE_COLOR = 0xff710d;
 const MIN_HEIGHT = -1000;
 
-
+var WIN = false;
+var TIME;
 var REGISTERED_MOVEMENTS = [];
 var CURRENT_MOVEMENTS = [];
 var START_TIME;
@@ -178,7 +179,9 @@ function update_cube(Cube, level, scene){
     ymax = exit[1] + EXIT_Y/2;
     if (Cube.x-Cube.d/2 <= xmax && Cube.x + Cube.d/2 >= xmin &&
         Cube.y-Cube.d/2 <= ymax && Cube.y + Cube.d/2 >= ymin) {
-        if (REGISTERED_MOVEMENTS.length === 0) {
+        if (REGISTERED_MOVEMENTS.length === 0 && WIN == false) {
+            WIN = true;
+            TIME = START_TIME - Date.now();
             printCombo(0, 0, 0, 'WINNER', scene, 0x31ffe1)
         }
     }

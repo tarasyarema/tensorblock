@@ -12,7 +12,7 @@
         margin: 0;
     }
 
-    h1#title {
+    h1.title {
         position: absolute; 
         z-index: 1;
     }
@@ -38,13 +38,16 @@
 
 <div class="container">
     <h1 class="title">the actual game</h1>
-    <canvas id="game" style="display: none">
-    </canvas>
+    <canvas id="game"></canvas>
 </div>
 
 <script>
     start_game(level2);
-    $(".container").append("<p>Hello</p>");
+    console.log(WIN, TIME);
+    if (WIN == true) {
+        $("#game").css("display", "none");
+        $("body").append("<p>You win! " + TIME + "</p>")
+    }
 </script>
 
 </body>
