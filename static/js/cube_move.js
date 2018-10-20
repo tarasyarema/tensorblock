@@ -189,7 +189,7 @@ function start_game(level){
     scene.add(Cube.mat);
 
     START_TIME = Date.now();
-    CURRENT_MOVEMENTS.push([0, identity]);
+    CURRENT_MOVEMENTS.push([Cube.x, Cube.y]);
 
     //Add event listeners for cube moving.
     document.addEventListener('keydown', function (event){
