@@ -40,9 +40,7 @@ function create_cube(x, y, z, col, scene) {
 
 function create_grid (x, y, z, height, width) {
     var pos = [];
-    for (var i = 0; i < width; ++i ) {
-        pos[i] = [[],[],[]];
-    }
+    for (var i = 0; i < width; ++i) pos[i] = [[],[],[]];
 
     pos[0][0] = [x,y,z];
     for (i = 0; i < height; ++i) {
@@ -70,11 +68,15 @@ function create_platform(x, y, w) {
 function create_exit(x, y, scene) {
     var pos = [x,y,0];
     var grid = create_grid(pos[0], pos[1], pos[2], door_width, door_height);
+    
+    console.log(pos);
+    console.log(grid);
 
     exit_boxes = [];
-    for (i = 0; i < door_height; ++i) {
+    for (var i = 0; i < door_height; ++i) {
         for (var j = 0; j < door_width; ++j) {
-            if (exit_door[door_width*i + j]!==0x000000){
+            if (exit_door[door_width*i + j] !== 0x000000 && exit_door[door_width*i + j] !== 0xffffff){
+                // console.log(j, i, grid[j][i]);
                 exit_boxes.push(create_cube(grid[j][i][0], grid[j][i][1], grid[j][i][2],
                                                exit_door[door_width*i + j], scene));
             }
@@ -160,7 +162,7 @@ function setup_level(level) {
     }
 
     // Draw exit.
-    scene.add(create_exit(level.exit[0], level.exit[1], scene));
+    // scene.add(create_exit(level.exit[0], level.exit[1], scene));
 
     //Draw portals.
     var portal;
