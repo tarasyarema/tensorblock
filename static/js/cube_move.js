@@ -48,7 +48,6 @@ function key_down_listener(event, Cube) {
     
     // get key pressed.
     key = event.key;
-    console.log(key);
 
     // if left arrow key is pressed then , depending on 'ChangeYearOnKeyPress'
     // variable value we show previous page of bookmarks or of backgrounds
@@ -106,8 +105,9 @@ function update_cube(Cube, level, scene){
     Cube.x += Cube.vx;
     Cube.y += Cube.vy;
 
-    if (Cube.y <= MIN_HEIGHT)
-        run_future(Cube);
+    if (Cube.y <= MIN_HEIGHT && (!LOSS && !WIN)) {
+        run_future(Cube, scene);
+    }
 
     let is_on_platform = false;
 
