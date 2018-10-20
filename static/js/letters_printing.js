@@ -1,4 +1,3 @@
-
 function creaCube(x, y, z, scene, col) {
     var geometry = new THREE.BoxGeometry( CUBE_EDGE/2, CUBE_EDGE/2, CUBE_EDGE/2);
     var material = new THREE.MeshPhongMaterial( {color: col} );
@@ -8,7 +7,7 @@ function creaCube(x, y, z, scene, col) {
     cube.position.z = z;
     cube.castShadow = false;
     cube.receiveShadow = true;
-    scene.add( cube );
+    scene.add(cube);
 }
 
 function creaGrid (x, y, z) {

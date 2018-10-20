@@ -12,7 +12,7 @@ var TIME;
 var REGISTERED_MOVEMENTS = [];
 var CURRENT_MOVEMENTS = [];
 var START_TIME;
-var MIN_INTER_TRAVEL_TIME = 1000;
+var MIN_INTER_TRAVEL_TIME = 2000;
 var EVENT_LISTENERS_ENABLED = true;
 var GRABBABLE_OBJECTS = [];
 var GRABBED_OBJECT = null;
@@ -44,8 +44,11 @@ function key_down_up(Cube) {
 function key_down_listener(event, Cube) {
     var key;
     pingu_index = 0;
+    
     // get key pressed.
     key = event.key;
+    console.log(key);
+
     // if left arrow key is pressed then , depending on 'ChangeYearOnKeyPress'
     // variable value we show previous page of bookmarks or of backgrounds
     if (key === "ArrowLeft" && EVENT_LISTENERS_ENABLED) {
@@ -55,23 +58,23 @@ function key_down_listener(event, Cube) {
 
     // if right arrow key is pressed then , depending on 'ChangeYearOnKeyPress'
     // variable value we show next page of bookmarks or of backgrounds
-    if (key === "ArrowRight" && EVENT_LISTENERS_ENABLED) {
+    else if (key === "ArrowRight" && EVENT_LISTENERS_ENABLED) {
         register_event(key_down_right);
         key_down_right(Cube);
     }
 
     // if right arrow key is pressed then , depending on 'ChangeYearOnKeyPress'
     // variable value we show next page of bookmarks or of backgrounds
-    if (key === "ArrowUp" && EVENT_LISTENERS_ENABLED) {
+    else if (key === "ArrowUp" && EVENT_LISTENERS_ENABLED) {
         register_event(key_down_up);
         key_down_up(Cube)
     }
 
     // if right arrow key is pressed then , depending on 'ChangeYearOnKeyPress'
     // variable value we show next page of bookmarks or of backgrounds
-    if (key === "Space" && EVENT_LISTENERS_ENABLED) {
-        register_event(key_down_backspace);
-        key_down_backspace(Cube)
+    else if (key === " " && EVENT_LISTENERS_ENABLED) {
+        register_event(key_down_space);
+        key_down_space(Cube)
     }
 }
 
@@ -102,13 +105,12 @@ function update_cube(Cube, level, scene){
     Cube.x += Cube.vx;
     Cube.y += Cube.vy;
 
-    if (Cube.y <= MIN_HEIGHT) {
-        run_future(Cube)
-    }
+    if (Cube.y <= MIN_HEIGHT)
+        run_future(Cube);
 
     var is_on_platform = false;
 
-    for (var i=0; i< platforms.length; i++){
+    for (var i = 0; i < platforms.length; ++i) {
         let platform = platforms[i];
         let xmin = platform[0] - platform[2]/2;
         let xmax = platform[0] + platform[2]/2;
@@ -251,7 +253,7 @@ function start_game(level){
     // Creating render function.
     var render = function () {
         requestAnimationFrame(render);
-        update_cube(Cube, level, scene);
+        update_cube(Cube, level, scene, CUBE_COLOR);
         renderer.render(scene, camera);
     };
 

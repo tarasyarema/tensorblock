@@ -105,7 +105,7 @@ function create_exit(x, y, scene) {
 
 function create_bar(x, y, w) {
     var geometry = new THREE.BoxGeometry(w, BAR_Y, BAR_Z);
-    var material = new THREE.MeshPhongMaterial({ color: BAR_COLOR, vertexColors: THREE.FaceColors });
+    var material = new THREE.MeshPhongMaterial({ color: BAR_COLOR });
     var bar =  new THREE.Mesh(geometry, material);
 
     for (var i = 0; i < geometry.faces.length; ++i) 

@@ -1,28 +1,24 @@
-
-
-function key_down_backspace(Cube) {
+function key_down_space(Cube) {
     if (GRABBED_OBJECT !== null) {
-        GRABBED_OBJECT.position.set(Cube.x, Cube.y+Cube.d/2 + BAR_Y/2);
-        GRABBED_OBJECT.color.set(PLATFORM_COLOR);
+        console.log(GRABBED_OBJECT);
+        GRABBED_OBJECT.position.x = Cube.x;
+        GRABBED_OBJECT.position.y = Cube.y+Cube.d/2 + BAR_Y/2;
+        GRABBED_OBJECT.material.color.setHex(PLATFORM_COLOR);
         GRABBED_OBJECT = null;
-        return 0
-    }
-    else {
-        var bar;
-        var xmin;
-        var xmax;
-        var ymin;
-        var ymax;
-        for (var i=0; i < BARS.length; i++) {
-            bar = BARS[i];
-            xmin = bar.position.x - bar.shape.width/2;
-            xmax = bar.position.x + bar.shape.width/2;
-            ymin = bar.position.y - bar.shape.height/2;
-            ymax = bar.position.y + bar.shape.height/2;
+
+        return 0;
+    } else {
+
+        for (var i = 0; i < BARS.length; i++) {
+            let bar = BARS[i];
+            let xmin = bar.position.x - bar.geometry.parameters.width/2;
+            let xmax = bar.position.x + bar.geometry.parameters.width/2;
+            let ymin = bar.position.y - bar.geometry.parameters.height/2;
+            let ymax = bar.position.y + bar.geometry.parameters.height/2;
+            
             if (Cube.x - Cube.d / 2 <= xmax && Cube.x + Cube.d / 2 >= xmin &&
                 Cube.y - Cube.d / 2 <= ymax && Cube.y + Cube.d / 2 >= ymin) {
-                BARS.pop(i);
-                GRABBED_OBJECT = bar;
+                GRABBED_OBJECT = BARS.pop(i);
                 break;
             }
         }
