@@ -109,18 +109,25 @@ function update_cube(Cube, level, scene){
         ymax = platform[1] + PLATFORM_Y/2;
         ymin = platform[1] - PLATFORM_Y/2;
         if (Cube.x-Cube.d/2 <= xmax && Cube.x + Cube.d/2 >= xmin) {
-            if (Cube.y - Cube.d / 2 <= ymax + EPSILON && Cube.y >= ymin) {
-                is_on_platform = true;
-                Cube.y = ymax + Cube.d / 2;
+            if (Cube.y - Cube.d / 2 <= ymax + EPSILON && Cube.y +Cube.d/2 >= ymin) {
+				if(Cube.vy <= 0){
+					is_on_platform = true;
+					Cube.y = ymax + Cube.d / 2;
+				}else{
+					if(is_on_platform == false){
+						Cube.y = ymin - Cube.d / 2;
+						Cube.vy = 0;
+					}
+				}
             }
             else if (Math.max(Cube.y - Cube.d/2, ymin) <= Math.min(Cube.y + Cube.d/2, ymax)) {
-                if (Cube.vx >= 0) {
+                /**if (Cube.vx >= 0) {
                     Cube.x = xmin - Cube.d / 2;
                 }
                 else if (Cube.vx < 0) {
                     Cube.x = xmax + Cube.d / 2;
                 }
-                /**if (Cube.vy >= 0) {
+                if (Cube.vy >= 0) {
                     Cube.y = ymin - Cube.d / 2;
                 }
                 else if (Cube.vy < 0) {
@@ -189,7 +196,7 @@ function start_game(level){
     scene.add(Cube.mat);
 
     START_TIME = Date.now();
-    CURRENT_MOVEMENTS.push([Cube.x, Cube.y]);
+    //CURRENT_MOVEMENTS.push([0, identity]);
 
     //Add event listeners for cube moving.
     document.addEventListener('keydown', function (event){
