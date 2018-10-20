@@ -187,19 +187,24 @@ function update_cube(Cube, level, scene){
         }
     }
 
-    let portal = level.portal;
+    let portals = level.portals;
+    if (portals !== null){
+        for (let i=0; i< portals.length; i++){
+            let portal = portals[i];
+            let xmin = portal[0] - PORTAL_X / 2;
+            let xmax = portal[0] + PORTAL_X / 2;
+            let ymin = portal[1] - PORTAL_Y / 2;
+            let ymax = portal[1] + PORTAL_Y / 2;
 
-    let xmin = portal[0] - PORTAL_X / 2;
-    let xmax = portal[0] + PORTAL_X / 2;
-    let ymin = portal[1] - PORTAL_Y / 2;
-    let ymax = portal[1] + PORTAL_Y / 2;
 
-    if (Cube.x - Cube.d / 2 <= xmax && Cube.x + Cube.d / 2 >= xmin &&
-        Cube.y - Cube.d / 2 <= ymax && Cube.y + Cube.d / 2 >= ymin) {
-        if ((Date.now() - START_TIME) >= MIN_INTER_TRAVEL_TIME) {
-            console.log("Registering RUN!");
-            console.log({REGISTERED_MOVEMENTS, CURRENT_MOVEMENTS, EVENT_LISTENERS_ENABLED, GRABBABLE_OBJECTS, GRABBED_OBJECT});
-            register_run(Cube);
+            if (Cube.x - Cube.d / 2 <= xmax && Cube.x + Cube.d / 2 >= xmin &&
+                Cube.y - Cube.d / 2 <= ymax && Cube.y + Cube.d / 2 >= ymin) {
+                if ((Date.now() - START_TIME) >= MIN_INTER_TRAVEL_TIME) {
+                    console.log("Registering RUN!");
+                    console.log({REGISTERED_MOVEMENTS, CURRENT_MOVEMENTS, EVENT_LISTENERS_ENABLED, GRABBABLE_OBJECTS, GRABBED_OBJECT});
+                    register_run(Cube);
+                }
+            }
         }
     }
 
