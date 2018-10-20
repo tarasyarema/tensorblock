@@ -69,7 +69,7 @@ function key_down_listener(event, Cube) {
 
     // if right arrow key is pressed then , depending on 'ChangeYearOnKeyPress'
     // variable value we show next page of bookmarks or of backgrounds
-    if (key === "backspace" && EVENT_LISTENERS_ENABLED) {
+    if (key === "Space" && EVENT_LISTENERS_ENABLED) {
         register_event(key_down_backspace);
         key_down_backspace(Cube)
     }
@@ -97,7 +97,6 @@ function key_up_listener(event, Cube) {
     }
 }
 
-
 function update_cube(Cube, level, scene){
     var platforms = level.platforms;
     Cube.x += Cube.vx;
@@ -121,11 +120,11 @@ function update_cube(Cube, level, scene){
         ymin = platform[1] - PLATFORM_Y/2;
         if (Cube.x-Cube.d/2 <= xmax && Cube.x + Cube.d/2 >= xmin) {
             if (Cube.y - Cube.d / 2 <= ymax + EPSILON && Cube.y +Cube.d/2 >= ymin) {
-				if(Cube.vy <= 0){
+				if (Cube.vy <= 0) {
 					is_on_platform = true;
 					Cube.y = ymax + Cube.d / 2;
-				}else{
-					if(is_on_platform === false){
+				} else {
+					if (is_on_platform === false) {
 						Cube.y = ymin - Cube.d / 2;
 						Cube.vy = 0;
 					}
@@ -152,7 +151,7 @@ function update_cube(Cube, level, scene){
 
     var portals = level.portal;
     var portal;
-    for (i=0; i < portals.length; i ++) {
+    for (var i=0; i < portals.length; i ++) {
         portal = portals[i];
         xmin = portal[0] - PORTAL_X / 2;
         xmax = portal[0] + PORTAL_X / 2;
@@ -169,10 +168,9 @@ function update_cube(Cube, level, scene){
     //Store if the cube is on a platform or not.
     Cube.on_platform = is_on_platform;
 
-    if (is_on_platform){
+    if (is_on_platform) {
         Cube.vy = 0;
-    }
-    else {
+    } else {
         Cube.vy += GRAVITY;
         Cube.vy = Math.min(Cube.vy, VERTICAL_SPEED);
         Cube.vy = Math.max(Cube.vy, -VERTICAL_SPEED);
@@ -180,11 +178,15 @@ function update_cube(Cube, level, scene){
 
     Cube.mat.position.set(Cube.x, Cube.y, Cube.z);
 
+    if (GRABBED_OBJECT !== null)
+        GRABBED_OBJECT.position.set(Cube.x, Cube.y + Cube.d/2+ BAR_Y/2, Cube.z);
+
     var exit = level.exit;
     xmin = exit[0] - EXIT_X/2;
     xmax = exit[0] + EXIT_X/2;
     ymin = exit[1] - EXIT_Y/2;
     ymax = exit[1] + EXIT_Y/2;
+
     if (Cube.x-Cube.d/2 <= xmax && Cube.x + Cube.d/2 >= xmin &&
         Cube.y-Cube.d/2 <= ymax && Cube.y + Cube.d/2 >= ymin) {
         if (REGISTERED_MOVEMENTS.length === 0 && WIN == false) {
@@ -214,15 +216,16 @@ function start_game(level){
     for(i = 0; i < geometry.faces.length; ++i){
         geometry.faces[i].color.setHex(Math.random() * 0xaa710d);
     }
-    var Cube = {mat: new THREE.Mesh(geometry, material),
-                x: level.init[0],
-                y: level.init[1] + CUBE_EDGE/2+PLATFORM_Y/2,
-                z: 0,
-                on_platform: false,
-                vx: 0,
-                vy: 0,
-                vz: 0,
-                d: CUBE_EDGE};
+    var Cube = {
+        mat: new THREE.Mesh(geometry, material),
+        x: level.init[0],
+        y: level.init[1] + CUBE_EDGE/2+PLATFORM_Y/2,
+        z: 0,
+        on_platform: false,
+        vx: 0,
+        vy: 0,
+        vz: 0,
+        d: CUBE_EDGE };
 
     //Set initial cube position and make fancy shadowing.
     Cube.mat.position.set(Cube.x, Cube.y, Cube.z);
@@ -241,6 +244,12 @@ function start_game(level){
     document.addEventListener('keyup', function (event){
         key_up_listener(event, Cube);
     });
+
+    window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    }, false);
 
     // Creating render function.
     var render = function () {

@@ -20,10 +20,10 @@ var BAR_SHAPES = [];
 var exit_boxes;
 
 function mean_position(level) {
-    let min = 1000;
-    let max = -1000;
+    var min = 1000;
+    var max = -1000;
 
-    for (let i = 0; i < level.platforms.length; ++i) {
+    for (var i = 0; i < level.platforms.length; ++i) {
         if (level.platforms[i][0] < min) min = level.platforms[i][0];
         if (level.platforms[i][0] + level.platforms[i][2] > max) max = level.platforms[i][0] + level.platforms[i][2];
     }
