@@ -66,9 +66,9 @@ function key_down_listener(event, Cube) {
 
 
 function arrow_up(Cube) {
-    if (Cube.on_platform) {
+    //if (Cube.on_platform) {
         Cube.vx = 0;
-    }
+    //}
 }
 
 /**
@@ -112,9 +112,6 @@ function update_cube(Cube, level, scene){
             if (Cube.y - Cube.d / 2 <= ymax + EPSILON && Cube.y >= ymin) {
                 is_on_platform = true;
                 Cube.y = ymax + Cube.d / 2;
-				if(Cube.vy <= -0.5){
-					Cube.vx = 0;
-				}
             }
             else if (Math.max(Cube.y - Cube.d/2, ymin) <= Math.min(Cube.y + Cube.d/2, ymax)) {
                 if (Cube.vx >= 0) {
