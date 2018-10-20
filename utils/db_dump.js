@@ -1,4 +1,4 @@
-const db = require('./../database.js');
+const db = require('../database.js');
 
 db.User.find({}, function(err, docs) {
     if (err) throw err;

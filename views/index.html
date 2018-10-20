@@ -8,29 +8,41 @@
 
 <body>
 
-<div class="main">
-	<div class="container">
+		<div style="background:transparent !important" class="jumbotron vertical-center">
+	<div class="container-fluid">
 		<h1>epic game name</h1>
 		<p>Flipalo colaga :3</p>
-
-		<table class="table">
-			<thead>
-				<tr>
-					<th>USER</th>
-					<th>LVL</th>
-				</tr>
-			</thead>
-			<tbody>
-			<% for (var i = 0; i < ranking.length; ++i) { %>
-				<tr>
-					<th><%= ranking[i].username %></th>
-					<th><%= ranking[i].level %></th>
-				</tr>
-			<% } %>
-			</tbody>
-		</table>
-
-		<a href='/game'>Go to the game!</a>
+	</div>
+	<div class="container-fluid">
+		<div class="container" style="margin: auto;">
+			<table class="table table-hover">
+				<thead class="thead-dark">
+					<tr>
+						<th>USER</th>
+						<th>LVL0</th>
+						<th>LVL1</th>
+						<th>LVL2</th>
+						<th>LVL3</th>
+					</tr>
+				</thead>
+				<tbody>
+				<% for (var i = 0; i < ranking.length; ++i) { %>
+					<tr>
+						<th><%= ranking[i].username %></th>
+						<th><%= ranking[i].level %></th>
+						<th><%= ranking[i].level %></th>
+						<th><%= ranking[i].level %></th>
+						<th><%= ranking[i].level %></th>
+					</tr>
+				<% } %>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="container-fluid"></div>
+		<div class="row">
+			<a href='/game'>Go to the game!</a>
+		</div>
 	</div>
 </div>
 

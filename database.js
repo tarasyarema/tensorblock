@@ -10,11 +10,8 @@ var user = new mongoose.Schema({
         required: true,
         unique: true
     },
-    level: {
-        type: Number
-    },
-    time: {
-        type: Number
+    levels: {
+        type: Array
     }
 });
 
