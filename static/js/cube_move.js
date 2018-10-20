@@ -106,7 +106,7 @@ function update_cube(Cube, level, scene){
     Cube.y += Cube.vy;
 
     if (Cube.y <= MIN_HEIGHT && (!LOSS && !WIN)) {
-        run_future(Cube, scene);
+        run_future(Cube, scene, level);
     }
 
     let is_on_platform = false;
