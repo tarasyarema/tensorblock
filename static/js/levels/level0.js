@@ -6,4 +6,4 @@ const level0 = {
 	"hor_bar": null,
 	"ver_bar": null,
 	"spikes_lever": null
-}
+};
