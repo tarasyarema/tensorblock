@@ -14,6 +14,6 @@ function identity(Object) {
 
 function run_future(Object, scene){
     if (REGISTERED_MOVEMENTS.length === 0) {
-        printCombo(0, 0, 0, 'LOSER', scene, 0x31ffe1)
+        printCombo(0, 0, 0, 'LOSER', scene, 0xffe131)
     }
 }
