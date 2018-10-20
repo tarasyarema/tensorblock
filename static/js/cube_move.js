@@ -1,13 +1,15 @@
 const CUBE_EDGE = 2;
 const EPSILON = 0.7;
+const HORIZONTAL_ACC = 0.2;
 const SPEED = 1;
 const VERTICAL_SPEED = 1.2;
 const GRAVITY = -0.1;
-const CUBE_COLOR = 0Xff710d;
+const CUBE_COLOR = 0xff710d;
 
 
 var REGISTERED_MOVEMENTS = [];
 var CURRENT_MOVEMENTS = [];
+var START_TIME;
 
 
 /**
@@ -22,7 +24,8 @@ function key_down_listener(event, Cube) {
     // variable value we show previous page of bookmarks or of backgrounds
     if (key === "ArrowLeft") {
         if (Cube.on_platform) {
-            Cube.vx = -SPEED;
+            Cube.vx -= HORIZONTAL_ACC;
+            Cube.vx = Math.max(Cube.vx, -SPEED);
         }
     }
 
@@ -30,7 +33,8 @@ function key_down_listener(event, Cube) {
     // variable value we show next page of bookmarks or of backgrounds
     if (key === "ArrowRight") {
         if (Cube.on_platform) {
-            Cube.vx = SPEED;
+            Cube.vx += HORIZONTAL_ACC;
+            Cube.vx = Math.min(Cube.vx, SPEED);
         }
     }
 
@@ -106,13 +110,15 @@ function update_cube(Cube, level, scene){
     }
 
     var exit = level.exit;
-    xmin = exit[0] - PORTAL_X/2;
-    xmax = exit[0] + PORTAL_X/2;
-    ymin = exit[1] - PORTAL_Y/2;
-    ymax = exit[1] + PORTAL_Y/2;
+    xmin = exit[0] - EXIT_X/2;
+    xmax = exit[0] + EXIT_X/2;
+    ymin = exit[1] - EXIT_Y/2;
+    ymax = exit[1] + EXIT_Y/2;
     if (Cube.x-Cube.d/2 <= xmax && Cube.x + Cube.d/2 >= xmin &&
         Cube.y-Cube.d/2 <= ymax && Cube.y + Cube.d/2 >= ymin) {
-            printCombo (0, 0, 0, 'WINNER', scene, 0x31ffe1)
+        if (REGISTERED_MOVEMENTS.length === 0) {
+            printCombo(0, 0, 0, 'WINNER', scene, 0x31ffe1)
+        }
     }
 
     //Store if the cube is on a platform or not.
@@ -158,6 +164,8 @@ function start_game(level){
     Cube.mat.castShadow = true;
     Cube.mat.receiveShadow = false;
     scene.add(Cube.mat);
+
+    START_TIME = Date.now();
 
     //Add event listeners for cube moving.
     document.addEventListener('keydown', function (event){

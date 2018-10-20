@@ -1,9 +1,13 @@
 const PLATFORM_Y = 1;
 const PLATFORM_Z = 2;
+const EXIT_X = 0.75;
+const EXIT_Y = 4;
+const EXIT_Z = 2;
 const PORTAL_X = 0.75;
 const PORTAL_Y = 4;
 const PORTAL_Z = 2;
 const EXIT_COLOR = 0x070222;
+const PORTAL_COLOR = 0x022252;
 const PLATFORM_COLOR = 0xd0ff22;
 
 function create_platform(x, y, w) {
@@ -20,18 +24,32 @@ function create_platform(x, y, w) {
     return platform;
 }
 
-function create_portal(x, y) {
-    var geometry = new THREE.BoxGeometry(PORTAL_X, PORTAL_Y, PORTAL_Z);
+function create_exit(x, y) {
+    var geometry = new THREE.BoxGeometry(EXIT_X, EXIT_Y, EXIT_Z);
     var material = new THREE.MeshPhongMaterial({ color: EXIT_COLOR, vertexColors: THREE.FaceColors });
-    var portal =  new THREE.Mesh(geometry, material);
+    var exit =  new THREE.Mesh(geometry, material);
     for(var i = 0; i < geometry.faces.length; ++i){
         geometry.faces[i].color.setHex(Math.random() * EXIT_COLOR);
     }
 
-    portal.position.set(x, y+PORTAL_Y/2+PLATFORM_Y/2, 0);
-    portal.castShadow = true;
-    portal.receiveShadow = false;
-    return portal;
+    exit.position.set(x, y+EXIT_Y/2+PLATFORM_Y/2, 0);
+    exit.castShadow = true;
+    exit.receiveShadow = false;
+    return exit;
+}
+
+function create_portal(x, y) {
+    var geometry = new THREE.BoxGeometry(PORTAL_X, PORTAL_Y, PORTAL_Z);
+    var material = new THREE.MeshPhongMaterial({ color: PORTAL_COLOR, vertexColors: THREE.FaceColors });
+    var exit =  new THREE.Mesh(geometry, material);
+    for(var i = 0; i < geometry.faces.length; ++i){
+        geometry.faces[i].color.setHex(Math.random() * PORTAL_COLOR);
+    }
+
+    exit.position.set(x, y+EXIT_Y/2+PLATFORM_Y/2, 0);
+    exit.castShadow = true;
+    exit.receiveShadow = false;
+    return exit;
 }
 
 function setup_level(level) {
@@ -80,8 +98,8 @@ function setup_level(level) {
         scene.add(create_platform(x, y, w));
     }
 
-    // Draw platform.
-    scene.add(create_portal(level.exit[0], level.exit[1]));
+    // Draw exit.
+    scene.add(create_exit(level.exit[0], level.exit[1]));
 
 
 
