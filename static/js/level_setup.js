@@ -6,7 +6,7 @@ function create_platform(x, y, w) {
     var material = new THREE.MeshPhongMaterial({ color: 0xffffff, vertexColors: THREE.FaceColors }); 
     var platform =  new THREE.Mesh(geometry, material);
 
-    platform.position.set = (x, y, 0);
+    platform.position.set(x, y, 0);
     platform.castShadow = true;
     platform.receiveShadow = false;
     return platform;
@@ -18,7 +18,7 @@ function setup_level(level) {
     scene.background = new THREE.Color(back);
 
     var camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 1, 1000);
-    camera.position.z = -20;
+    camera.position.z = 20;
 
     var renderer = new THREE.WebGLRenderer();
     renderer.setPixelRatio(window.devicePixelRatio);
@@ -40,20 +40,23 @@ function setup_level(level) {
     lights.directional_1.position.set(50, 200, 100);
     lights.directional_1.castShadow = true;
     scene.add(lights.directional_1);
-    lights.directional_2.position.set(-10, 200, -100);
+    lights.directional_2.position.set(10, 200, -100);
     lights.directional_2.castShadow = true;
     scene.add(lights.directional_2);
     lights.ambient.castShadow = true;
     scene.add(lights.ambient);
 
 
-    console.log(level.platforms);
-
-    for (let i = 0; i < level.platforms.length; ++i) {
-        let tmp = level.platforms[i];
-        scene.add(create_platform(tmp[0], tmp[1], tmp[2]));
-        
-        console.log("Created platform %d: (%d, %d, %d)", i, tmp[0], tmp[1], tmp[2]);
+    var platform;
+    var x;
+    var y;
+    var w;
+    for (var i = 0; i < level.platforms.length; ++i) {
+        platform = level.platforms[i];
+        x = platform[0];
+        y = platform[1];
+        w = platform[2];
+        scene.add(create_platform(x, y, w));
     }
 
     return {

@@ -1,13 +1,7 @@
 const CUBE_EDGE = 2;
-const EPSILON = 0.1;
-const WAIT_PERIOD = 200;
-const SPEED = 2;
-const GRAVITY = -0.5;
-
-
-var x_pos;
-var y_pos;
-var z_pos;
+const EPSILON = 0.7;
+const SPEED = 1;
+const GRAVITY = -0.25;
 
 
 /**
@@ -22,7 +16,7 @@ function key_down_listener(event, Cube) {
     // variable value we show previous page of bookmarks or of backgrounds
     if (key === "ArrowLeft") {
         if (Cube.on_platform) {
-            Cube.vx = -SPEED;
+            Cube.vx = SPEED;
         }
     }
 
@@ -30,7 +24,7 @@ function key_down_listener(event, Cube) {
     // variable value we show next page of bookmarks or of backgrounds
     if (key === "ArrowRight") {
         if (Cube.on_platform) {
-            Cube.vx = SPEED;
+            Cube.vx = -SPEED;
         }
     }
 
@@ -70,42 +64,49 @@ function update_cube(Cube, platforms){
     var platform;
     var xmin;
     var xmax;
-    var y;
-    for (var i=0; i< platforms.length; i++){
-        platform = platforms[i];
-        xmin = platform[0];
-        xmax = xmin + platform[2];
-        y = platform[1];
-        if (Cube.x <= xmax && Cube.x + Cube.d >= xmin && Math.abs(Cube.y + Cube.d -y) <= EPSILON ){
-            is_on_platform = true;
-        }
-        if (Math.max(Cube.x, xmin) <= Math.min(Cube.x + Cube.d, xmax) &&
-            Math.max(Cube.y, y) <= Math.min(Cube.y + Cube.d, y+EPSILON)){
-            if (Cube.vx >= 0) {
-                Cube.x = xmin - Cube.d;
-            }
-            else if (Cube.vx < 0) {
-                Cube.x = xmax;
-            }
-            if (Cube.vy >= 0) {
-                Cube.y = y - Cube.d;
-            }
-            else if (Cube.vx < 0) {
-                Cube.y = y + EPSILON;
-            }
-        }
-    }
+    var ymax;
+    var ymin;
+    // for (var i=0; i< platforms.length; i++){
+    //     platform = platforms[i];
+    //     xmin = platform[0] - platform[2]/2;
+    //     xmax = platform[0] + platform[2]/2;
+    //     ymax = platform[1];
+    //     ymin = platform[1] - EPSILON;
+    //     if (Cube.x-Cube.d/2 <= xmax && Cube.x + Cube.d/2 >= xmin && Math.abs(Cube.y-Cube.d/2 - ymax) <= EPSILON ){
+    //         is_on_platform = true;
+    //         Cube.y = ymax + Cube.d/2
+    //     }
+    //     if (Math.max(Cube.x - Cube.d/2, xmin) <= Math.min(Cube.x + Cube.d/2, xmax) &&
+    //         Math.max(Cube.y - Cube.d/2, ymin) <= Math.min(Cube.y + Cube.d/2, ymax)){
+    //         if (Cube.vx >= 0) {
+    //             Cube.x = xmin - Cube.d/2;
+    //         }
+    //         else if (Cube.vx < 0) {
+    //             Cube.x = xmax + Cube.d/2;
+    //         }
+    //         if (Cube.vy >= 0) {
+    //             Cube.y = ymin - Cube.d/2;
+    //         }
+    //         else if (Cube.vy < 0) {
+    //             Cube.y = ymax + Cube.d/2;
+    //         }
+    //     }
+    // }
 
     //Store if the cube is on a platform or not.
     Cube.on_platform = is_on_platform;
 
-    if (!is_on_platform){
-        Cube.vy += GRAVITY;
+    if (is_on_platform){
+        Cube.vy = 0;
     }
     else {
-        Cube.vy = 0;
-
+        Cube.vy += GRAVITY;
+        Cube.vy = Math.min(Cube.vy, SPEED);
+        Cube.vy = Math.max(Cube.vy, -SPEED);
     }
+    Cube.vy = 0;
+
+    Cube.mat.position.set(Cube.x, Cube.y, Cube.z);
 }
 
 function start_game(level){
@@ -114,8 +115,6 @@ function start_game(level){
     var scene = aux.scene;
     var camera = aux.camera;
     var renderer = aux.renderer;
-
-    z_pos = 0;
 
     // Define cube and set initial position.
     var material = new THREE.MeshPhongMaterial({color: 0xffd8eb});
