@@ -89,7 +89,7 @@ function arrow_up(Cube) {
  * react to key pressed.
  */
 function key_up_listener(event, Cube) {
-    var key;
+    let key;
     // get key pressed.
     key = event.key;
     // if left arrow key is pressed then , depending on 'ChangeYearOnKeyPress'
@@ -101,16 +101,16 @@ function key_up_listener(event, Cube) {
 }
 
 function update_cube(Cube, level, scene){
-    var platforms = level.platforms;
+    let platforms = level.platforms;
     Cube.x += Cube.vx;
     Cube.y += Cube.vy;
 
     if (Cube.y <= MIN_HEIGHT)
         run_future(Cube);
 
-    var is_on_platform = false;
+    let is_on_platform = false;
 
-    for (var i = 0; i < platforms.length; ++i) {
+    for (let i = 0; i < platforms.length; ++i) {
         let platform = platforms[i];
         let xmin = platform[0] - platform[2]/2;
         let xmax = platform[0] + platform[2]/2;
@@ -119,27 +119,27 @@ function update_cube(Cube, level, scene){
 
         if (Cube.x-Cube.d/2 <= xmax && Cube.x + Cube.d/2 >= xmin) {
             if (Cube.y - Cube.d / 2 <= ymax + EPSILON && Cube.y +Cube.d/2 >= ymin) {
-				if (Cube.vy <= 0) {
-					is_on_platform = true;
-					Cube.y = ymax + Cube.d / 2;
-				} else {
-					if (is_on_platform === false) {
-						Cube.y = ymin - Cube.d / 2;
-						Cube.vy = 0;
-					}
-				}
+                if (Cube.vy <= 0) {
+                    is_on_platform = true;
+                    Cube.y = ymax + Cube.d / 2;
+                } else {
+                    if (is_on_platform === false) {
+                        Cube.y = ymin - Cube.d / 2;
+                        Cube.vy = 0;
+                    }
+                }
             }
             else if (Math.max(Cube.y - Cube.d/2, ymin) <= Math.min(Cube.y + Cube.d/2, ymax)) {
                 /**if (Cube.vx >= 0) {
                     Cube.x = xmin - Cube.d / 2;
                 }
-                else if (Cube.vx < 0) {
+                 else if (Cube.vx < 0) {
                     Cube.x = xmax + Cube.d / 2;
                 }
-                if (Cube.vy >= 0) {
+                 if (Cube.vy >= 0) {
                     Cube.y = ymin - Cube.d / 2;
                 }
-                else if (Cube.vy < 0) {
+                 else if (Cube.vy < 0) {
                     Cube.y = ymax + Cube.d / 2;
                 }**/
                 Cube.vx = 0;
@@ -148,12 +148,52 @@ function update_cube(Cube, level, scene){
         }
     }
 
+    for (let i = 0; i < BARS; ++i) {
+        let bar = BARS[i];
+        if (bar.color === PLATFORM_COLOR) {
+            let xmin = bar.position.x - bar.geometry.parameters.width / 2;
+            let xmax = bar.position.x + bar.geometry.parameters.width / 2;
+            let ymax = bar.position.y + BAR_Y / 2;
+            let ymin = bar.position.y - BAR_Y / 2;
+
+            if (Cube.x - Cube.d / 2 <= xmax && Cube.x + Cube.d / 2 >= xmin) {
+                if (Cube.y - Cube.d / 2 <= ymax + EPSILON && Cube.y + Cube.d / 2 >= ymin) {
+                    if (Cube.vy <= 0) {
+                        is_on_platform = true;
+                        Cube.y = ymax + Cube.d / 2;
+                    } else {
+                        if (is_on_platform === false) {
+                            Cube.y = ymin - Cube.d / 2;
+                            Cube.vy = 0;
+                        }
+                    }
+                }
+                else if (Math.max(Cube.y - Cube.d / 2, ymin) <= Math.min(Cube.y + Cube.d / 2, ymax)) {
+                    /**if (Cube.vx >= 0) {
+                    Cube.x = xmin - Cube.d / 2;
+                }
+                     else if (Cube.vx < 0) {
+                    Cube.x = xmax + Cube.d / 2;
+                }
+                     if (Cube.vy >= 0) {
+                    Cube.y = ymin - Cube.d / 2;
+                }
+                     else if (Cube.vy < 0) {
+                    Cube.y = ymax + Cube.d / 2;
+                }**/
+                    Cube.vx = 0;
+                    //Cube.vy = 0;
+                }
+            }
+        }
+    }
+
     let portal = level.portal;
 
-    xmin = portal[0] - PORTAL_X / 2;
-    xmax = portal[0] + PORTAL_X / 2;
-    ymin = portal[1] - PORTAL_Y / 2;
-    ymax = portal[1] + PORTAL_Y / 2;
+    let xmin = portal[0] - PORTAL_X / 2;
+    let xmax = portal[0] + PORTAL_X / 2;
+    let ymin = portal[1] - PORTAL_Y / 2;
+    let ymax = portal[1] + PORTAL_Y / 2;
 
     if (Cube.x - Cube.d / 2 <= xmax && Cube.x + Cube.d / 2 >= xmin &&
         Cube.y - Cube.d / 2 <= ymax && Cube.y + Cube.d / 2 >= ymin) {
@@ -180,7 +220,7 @@ function update_cube(Cube, level, scene){
     if (GRABBED_OBJECT !== null)
         GRABBED_OBJECT.position.set(Cube.x, Cube.y + Cube.d/2+ BAR_Y/2, Cube.z);
 
-    var exit = level.exit;
+    let exit = level.exit;
     xmin = exit[0] - EXIT_X/2;
     xmax = exit[0] + EXIT_X/2;
     ymin = exit[1] - EXIT_Y/2;
@@ -188,7 +228,7 @@ function update_cube(Cube, level, scene){
 
     if (Cube.x-Cube.d/2 <= xmax && Cube.x + Cube.d/2 >= xmin &&
         Cube.y-Cube.d/2 <= ymax && Cube.y + Cube.d/2 >= ymin) {
-        if (REGISTERED_MOVEMENTS.length === 0 && WIN == false) {
+        if (REGISTERED_MOVEMENTS.length === 0 && WIN === false) {
             WIN = true;
             TIME = START_TIME - Date.now();
             printCombo(0, 0, 0, 'WINNER', scene, 0x31ffe1)
@@ -199,23 +239,23 @@ function update_cube(Cube, level, scene){
 
 function start_game(level){
     // Initializing Scene
-    var aux = setup_level(level);
-    var scene = aux.scene;
-    var camera = aux.camera;
-    var renderer = aux.renderer;
+    let aux = setup_level(level);
+    let scene = aux.scene;
+    let camera = aux.camera;
+    let renderer = aux.renderer;
 
     // Initilize grabbable objects.
-    for (var i = 0; i < BARS.length; i++) {
+    for (let i = 0; i < BARS.length; i++) {
         GRABBABLE_OBJECTS[i] = BARS[i];
     }
 
     // Define cube and set initial position.
-    var material = new THREE.MeshPhongMaterial({color: CUBE_COLOR});
-    var geometry = new THREE.BoxGeometry(CUBE_EDGE, CUBE_EDGE, CUBE_EDGE);
-    for(i = 0; i < geometry.faces.length; ++i){
+    let material = new THREE.MeshPhongMaterial({color: CUBE_COLOR});
+    let geometry = new THREE.BoxGeometry(CUBE_EDGE, CUBE_EDGE, CUBE_EDGE);
+    for(let i = 0; i < geometry.faces.length; ++i){
         geometry.faces[i].color.setHex(Math.random() * 0xaa710d);
     }
-    var Cube = {
+    let Cube = {
         mat: new THREE.Mesh(geometry, material),
         x: level.init[0],
         y: level.init[1] + CUBE_EDGE/2+PLATFORM_Y/2,
@@ -251,7 +291,7 @@ function start_game(level){
     }, false);
 
     // Creating render function.
-    var render = function () {
+    let render = function () {
         requestAnimationFrame(render);
         update_cube(Cube, level, scene, CUBE_COLOR);
         renderer.render(scene, camera);
