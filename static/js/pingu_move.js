@@ -67,7 +67,7 @@ function print_pingu (x, y, z, pingu_fig, scene) {
     pingu_boxes = [];
     for (i = 0; i < pingu_height; ++i) {
         for (var j = 0; j < pingu_width; ++j) {
-            if (pingu_fig[pingu_width*i + j]!==0x00000000){
+            if (pingu_fig[pingu_width*i + j]===0xff000000){
                 pingu_boxes.push(create_cube(grid[j][i][0], grid[j][i][1], grid[j][i][2],
                                                pingu_fig[pingu_width*i + j], scene));
             }
@@ -219,7 +219,7 @@ function init_scene(){
     pingu_move_left = false;
     pingu_index = 0;
     speed = 2;
-    wait_period = 500;
+    wait_period = 200;
 
 
     pingu_left_motion = [];
