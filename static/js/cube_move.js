@@ -250,6 +250,7 @@ function start_game(level){
     let renderer = aux.renderer;
     let update_blockchain = aux.update_blockchain;
     let update_tensorflow = aux.update_tensorflow;
+    let update_p_adics = aux.update_p_adics;
 
     // Initilize grabbable objects.
     for (let i = 0; i < BARS.length; i++) {
@@ -303,6 +304,7 @@ function start_game(level){
         update_cube(Cube, level, scene, CUBE_COLOR);
         update_blockchain();
         update_tensorflow();
+        update_p_adics();
         renderer.render(scene, camera);
     };
 

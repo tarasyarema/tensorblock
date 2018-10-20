@@ -160,6 +160,7 @@ function setup_level(level) {
     // Draw loles
     let update_blockchain = dinamicPrintCombo(110, 105, -150, "blockchain", scene, 0x412432);
     let update_tensorflow = dinamicPrintCombo(-95, 125, -150, "tensorflow", scene, 0xfe123d);
+    let update_p_adics = dinamicPrintCombo(10, -125, -150, "p-adic", scene, 0xd61394);
 
     /*
     Draw portals.
@@ -194,6 +195,7 @@ function setup_level(level) {
         camera: camera,
         renderer: renderer,
         update_blockchain: update_blockchain,
-        update_tensorflow: update_tensorflow
+        update_tensorflow: update_tensorflow,
+        update_p_adics: update_p_adics
     };
 }
