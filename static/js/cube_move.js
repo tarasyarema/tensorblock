@@ -3,7 +3,7 @@ const EPSILON = 0.7;
 const HORIZONTAL_ACC = 0.2;
 const SPEED = 1;
 const VERTICAL_SPEED = 1.2;
-const GRAVITY = -0.1;
+const GRAVITY = -0.08;
 const CUBE_COLOR = 0xff710d;
 
 
@@ -23,19 +23,19 @@ function key_down_listener(event, Cube) {
     // if left arrow key is pressed then , depending on 'ChangeYearOnKeyPress'
     // variable value we show previous page of bookmarks or of backgrounds
     if (key === "ArrowLeft") {
-        if (Cube.on_platform) {
+        //if (Cube.on_platform) {
             Cube.vx -= HORIZONTAL_ACC;
             Cube.vx = Math.max(Cube.vx, -SPEED);
-        }
+        //}
     }
 
     // if right arrow key is pressed then , depending on 'ChangeYearOnKeyPress'
     // variable value we show next page of bookmarks or of backgrounds
     if (key === "ArrowRight") {
-        if (Cube.on_platform) {
+        //if (Cube.on_platform) {
             Cube.vx += HORIZONTAL_ACC;
             Cube.vx = Math.min(Cube.vx, SPEED);
-        }
+        //}
     }
 
     // if right arrow key is pressed then , depending on 'ChangeYearOnKeyPress'
@@ -97,14 +97,14 @@ function update_cube(Cube, level, scene){
                 else if (Cube.vx < 0) {
                     Cube.x = xmax + Cube.d / 2;
                 }
-                if (Cube.vy >= 0) {
+                /**if (Cube.vy >= 0) {
                     Cube.y = ymin - Cube.d / 2;
                 }
                 else if (Cube.vy < 0) {
                     Cube.y = ymax + Cube.d / 2;
-                }
+                }**/
                 Cube.vx = 0;
-                Cube.vy = 0;
+                //Cube.vy = 0;
             }
         }
     }
