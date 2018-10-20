@@ -15,7 +15,7 @@ app.set('view engine', 'html');
 
 dotenv.load();
 app.set('port', process.env.PORT || 3000);
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'static')));
 app.set('views', path.join(__dirname, 'views'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -33,7 +33,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/game', (req, res) => {
-    res.render('game');
+    res.render('game_node');
 });
 
 app.get('/register', (req, res) => {

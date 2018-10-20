@@ -75,7 +75,8 @@ function setup_level(level) {
     camera.position.x = mean_position(level);
     camera.position.z = 35;
 
-    var renderer = new THREE.WebGLRenderer();
+    var game = document.getElementById("game");
+    var renderer = new THREE.WebGLRenderer({ canvas: game, antialias: true });
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.shadowMap.Enabled = true;

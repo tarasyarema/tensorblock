@@ -1,7 +1,7 @@
-const level1 = {
-	"platforms": [[-2, 2, 12], [7, -3, 8], [10, 2, 6]],
-	"portal": [7, -3],
-	"exit": [13, -3],
+const level2 = {
+	"platforms": [[-2, 2, 12], [16, -5, 10], [16, 6, 10]],
+	"portal": [20, -10],
+	"exit": [21, -5],
 	"init": [-2, 2],
 	"hor_bar": [[5,-3,2]],
 	"ver_bar": null,
