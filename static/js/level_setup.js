@@ -195,7 +195,13 @@ function setup_level(level) {
     }
 
     // Draw exit.
-    scene.add(create_portal(level.portal[0], level.portal[1], PORTAL_COLOR));
+    if (level.portals !== null) {
+        for (let i=0; i < level.portals.length; i++) {
+            let portal = level.portals[i];
+            scene.add(create_portal(portal[0], portal[1], PORTAL_COLOR));
+        }
+    }
+
     scene.add(create_portal(level.exit[0], level.exit[1], EXIT_COLOR));
 
 
@@ -218,14 +224,13 @@ function setup_level(level) {
     */
 
     if (level.hor_bar !== null) {
-        var bar;
-        for (var i = 0; i < level.hor_bar.length; ++i) {
-            portal = level.hor_bar[i];
+        for (let i = 0; i < level.hor_bar.length; ++i) {
+            let portal = level.hor_bar[i];
             x = portal[0];
             y = portal[1];
             w = portal[2];
             BAR_SHAPES.push([x, y, w]);
-            bar = create_bar(x, y, w);
+            let bar = create_bar(x, y, w);
             scene.add(bar);
             BARS.push(bar)
         }
