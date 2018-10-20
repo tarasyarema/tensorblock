@@ -1,4 +1,4 @@
-const level3 = {
+const level2 = {
 	"platforms": [[-2, 2, 12], [16, -5, 10], [-2, 6, 10]],
 	"portal": [20, -10],
 	"exit": [21, -5],

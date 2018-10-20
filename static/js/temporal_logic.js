@@ -9,9 +9,8 @@ function register_run(Cube) {
     START_TIME = Date.now();
 
     // Reset grabbable objects.
-    for (var i = 0; i < BARS.length; i++) {
+    for (var i = 0; i < BARS.length; ++i)
         GRABBABLE_OBJECTS[i] = BARS[i];
-    }
 
     // Reset Grabbable objects.
     var pos;
