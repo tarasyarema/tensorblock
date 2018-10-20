@@ -8,28 +8,42 @@ const PORTAL_Y = 4;
 const PORTAL_Z = 2;
 const BAR_Y = 1;
 const BAR_Z = 2;
-const EXIT_COLOR = 0x070222;
-const PORTAL_COLOR = 0x022252;
-const PLATFORM_COLOR = 0xd0ff22;
+const EXIT_COLOR = 0xdd73ff;
+const PORTAL_COLOR = 0xffdd73;
+const PLATFORM_COLOR = 0x262326;
 const BAR_COLOR = 0x666666;
 const CUBE_DIMENSION = 0.1;
+const CAMERA_Z = 35;
 
 var BARS = [];
 var BAR_SHAPES = [];
 
 var exit_boxes;
 
-function mean_position(level) {
+function mean_x(level) {
     var min = 1000;
     var max = -1000;
 
     for (var i = 0; i < level.platforms.length; ++i) {
         if (level.platforms[i][0] < min) min = level.platforms[i][0];
-        if (level.platforms[i][0] + level.platforms[i][2] > max) max = level.platforms[i][0] + level.platforms[i][2];
+        if (level.platforms[i][0] + PLATFORM_Y > max) max = level.platforms[i][0] + PLATFORM_Y;
     }
 
     return (max + min) / 2;
 }
+
+function mean_y(level) {
+    var min = 1000;
+    var max = -1000;
+
+    for (var i = 0; i < level.platforms.length; ++i) {
+        if (level.platforms[i][1] < min) min = level.platforms[i][1];
+        if (level.platforms[i][1] + level.platforms[i][2] > max) max = level.platforms[i][1] + level.platforms[i][2];
+    }
+
+    return (max + min) / 2;
+}
+
 
 function create_cube(x, y, z, col, scene) {
     var geometry = new THREE.BoxGeometry(CUBE_DIMENSION, CUBE_DIMENSION, CUBE_DIMENSION);
@@ -46,24 +60,23 @@ function create_cube(x, y, z, col, scene) {
 
 function create_grid (x, y, z, height, width) {
     var pos = [];
-    for (var i = 0; i < width; ++i) pos[i] = [[],[],[]];
+    for (var i = 0; i < width; ++i) 
+        pos[i] = [[],[],[]];
 
     pos[0][0] = [x,y,z];
-    for (i = 0; i < height; ++i) {
-        for (var j=0; j < width; ++j) {
-            pos[i][j] = [ CUBE_DIMENSION*(i+x), CUBE_DIMENSION*(-j+y), z ];
-        }
-    }
+    for (i = 0; i < height; ++i)
+        for (var j=0; j < width; ++j)
+            pos[i][j] = [ CUBE_DIMENSION * (i + x), CUBE_DIMENSION * (y - j), z ];
+
     return pos;
 }
 
 function create_platform(x, y, w) {
     var geometry = new THREE.BoxGeometry(w, PLATFORM_Y, PLATFORM_Z);
-    var material = new THREE.MeshPhongMaterial({ color: PLATFORM_COLOR, vertexColors: THREE.FaceColors });
+    var material = new THREE.MeshPhongMaterial({ color: PLATFORM_COLOR }); //, vertexColors: THREE.FaceColors });
     var platform =  new THREE.Mesh(geometry, material);
-    for(var i = 0; i < geometry.faces.length; ++i){
+    for (var i = 0; i < geometry.faces.length; ++i)
         geometry.faces[i].color.setHex(Math.random() * PLATFORM_COLOR);
-    }
 
     platform.position.set(x, y, 0);
     platform.castShadow = true;
@@ -94,13 +107,14 @@ function create_bar(x, y, w) {
     var geometry = new THREE.BoxGeometry(w, BAR_Y, BAR_Z);
     var material = new THREE.MeshPhongMaterial({ color: BAR_COLOR, vertexColors: THREE.FaceColors });
     var bar =  new THREE.Mesh(geometry, material);
-    for(var i = 0; i < geometry.faces.length; ++i){
+
+    for (var i = 0; i < geometry.faces.length; ++i) 
         geometry.faces[i].color.setHex(Math.random() * BAR_COLOR);
-    }
 
     bar.position.set(x, y, 0);
     bar.castShadow = true;
     bar.receiveShadow = false;
+
     return bar;
 }
 
@@ -119,28 +133,28 @@ function create_bar(x, y, w) {
     return exit;
 }**/
 
-function create_portal(x, y) {
+function create_portal(x, y, color) {
     var geometry = new THREE.BoxGeometry(PORTAL_X, PORTAL_Y, PORTAL_Z);
-    var material = new THREE.MeshPhongMaterial({ color: PORTAL_COLOR, vertexColors: THREE.FaceColors });
+    var material = new THREE.MeshPhongMaterial({ color: color });
     var exit =  new THREE.Mesh(geometry, material);
-    for(var i = 0; i < geometry.faces.length; ++i){
-        geometry.faces[i].color.setHex(Math.random() * PORTAL_COLOR);
-    }
 
-    exit.position.set(x, y+EXIT_Y/2+PLATFORM_Y/2, 0);
+    for (var i = 0; i < geometry.faces.length; ++i)
+        geometry.faces[i].color.setHex(Math.random() * PORTAL_COLOR);
+
+    exit.position.set(x, y + EXIT_Y / 2 + PLATFORM_Y / 2, 0);
     exit.castShadow = true;
     exit.receiveShadow = false;
+
     return exit;
 }
 
 function setup_level(level) {
-    var back = 0xffd8eb; // 0xffd8eb
+    var back = 0xffd8eb;
     var scene = new THREE.Scene();
     scene.background = new THREE.Color(back);
 
     var camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 1, 1000);
-    camera.position.x = mean_position(level);
-    camera.position.z = 35;
+    camera.position.set(mean_x(level), mean_y(level), CAMERA_Z);
 
     var game = document.getElementById("game");
     var renderer = new THREE.WebGLRenderer({ canvas: game, antialias: true });
@@ -182,12 +196,14 @@ function setup_level(level) {
     }
 
     // Draw exit.
-    // scene.add(create_exit(level.exit[0], level.exit[1], scene));
+    scene.add(create_portal(level.portal[0], level.portal[1], PORTAL_COLOR));
+    scene.add(create_portal(level.exit[0], level.exit[1], EXIT_COLOR));
 
-    //Draw portals.
+    /*
+    Draw portals.
     var portal;
     if (level.portal !== null) {
-        for (i = 0; i < level.portal.length; ++i) {
+        for (var i = 0; i < level.portal.length; ++i) {
             portal = level.portal[i];
             x = portal[0];
             y = portal[1];
@@ -195,10 +211,11 @@ function setup_level(level) {
             scene.add(create_portal(x, y, w));
         }
     }
+    */
 
     if (level.hor_bar !== null) {
         var bar;
-        for (i = 0; i < level.hor_bar.length; ++i) {
+        for (var i = 0; i < level.hor_bar.length; ++i) {
             portal = level.hor_bar[i];
             x = portal[0];
             y = portal[1];
