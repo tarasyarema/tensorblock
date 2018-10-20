@@ -18,7 +18,7 @@ function setup_level(level) {
     scene.background = new THREE.Color(back);
 
     var camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 1, 1000);
-    camera.position.z = -50;
+    camera.position.z = -20;
 
     var renderer = new THREE.WebGLRenderer();
     renderer.setPixelRatio(window.devicePixelRatio);
