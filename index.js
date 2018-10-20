@@ -8,6 +8,7 @@ var dotenv = require('dotenv');
 var logger = require('morgan');
 
 var app = express();
+const db = require('./database.js');
 
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
@@ -21,8 +22,14 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(logger('dev'));
 
 app.get('/', function (req, res) {
-    res.render('index', { 
-        name: "Test" });
+    db.User.find({}, (err, doc) => {
+        if (err) return err;
+        else {
+            res.render('index', {
+                ranking: doc
+            });
+        }
+    });
 });
 
 app.get('/game', function (req, res) {

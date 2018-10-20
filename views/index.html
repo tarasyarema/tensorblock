@@ -13,7 +13,22 @@
 		<h1>epic game name</h1>
 		<p>Flipalo colaga :3</p>
 
-		<h2> <%= name %> </h2>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>USER</th>
+					<th>LVL</th>
+				</tr>
+			</thead>
+			<tbody>
+			<% for (var i = 0; i < ranking.length; ++i) { %>
+				<tr>
+					<th><%= ranking[i].username %></th>
+					<th><%= ranking[i].level %></th>
+				</tr>
+			<% } %>
+			</tbody>
+		</table>
 
 		<a href='/game'>Go to the game!</a>
 	</div>
