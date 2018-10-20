@@ -44,7 +44,6 @@ function mean_y(level) {
     return (max + min) / 2;
 }
 
-
 function create_cube(x, y, z, col, scene) {
     var geometry = new THREE.BoxGeometry(CUBE_DIMENSION, CUBE_DIMENSION, CUBE_DIMENSION);
     var material = new THREE.MeshPhongMaterial( {color: col} );
@@ -198,6 +197,11 @@ function setup_level(level) {
     // Draw exit.
     scene.add(create_portal(level.portal[0], level.portal[1], PORTAL_COLOR));
     scene.add(create_portal(level.exit[0], level.exit[1], EXIT_COLOR));
+
+
+    // Draw loles
+    printCombo(110, 105, -150, "blockchain", scene, 0x412432);
+    printCombo(-95, 125, -150, "tensorflow", scene, 0xfe123d);
 
     /*
     Draw portals.
