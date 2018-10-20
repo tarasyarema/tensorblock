@@ -10,6 +10,8 @@ const EXIT_COLOR = 0x070222;
 const PORTAL_COLOR = 0x022252;
 const PLATFORM_COLOR = 0xd0ff22;
 
+var exit_boxes;
+
 function mean_position(level) {
     let min = 1000;
     let max = -1000;
@@ -22,6 +24,22 @@ function mean_position(level) {
     console.log(max, min);
     console.log((max + min) / 2);
     return (max + min) / 2;
+}
+
+function create_grid (x, y, z, height, width) {
+    var pos = [];
+    for (var i = 0; i < width; ++i ) {
+        pos[i] = [[],[],[]];
+    }
+
+    pos[0][0] = [x,y,z];
+
+    for (i = 0; i < height; ++i) {
+        for (var j=0; j < width; ++j) {
+            pos[i][j] = [ i+x, -j+y, z ];
+        }
+    }
+    return pos;
 }
 
 function create_platform(x, y, w) {
@@ -39,6 +57,22 @@ function create_platform(x, y, w) {
 }
 
 function create_exit(x, y) {
+    var pos = [x - EXIT_X/2, y - EXIT_Y/2, EXIT_Z];
+    var grid = create_grid(pos[0], pos[1], pos[2], door_height, door_width);
+
+    exit_boxes = [];
+    for (i = 0; i < door_height; ++i) {
+        for (var j = 0; j < door_width; ++j) {
+            if (exit_door[door_width*i + j]===0xff000000){
+                exit_boxes.push(create_cube(grid[j][i][0], grid[j][i][1], grid[j][i][2],
+                                               exit_door[door_width*i + j], scene));
+            }
+        }
+    }
+}
+	
+	
+/**	
     var geometry = new THREE.BoxGeometry(EXIT_X, EXIT_Y, EXIT_Z);
     var material = new THREE.MeshPhongMaterial({ color: EXIT_COLOR, vertexColors: THREE.FaceColors });
     var exit =  new THREE.Mesh(geometry, material);
@@ -50,7 +84,7 @@ function create_exit(x, y) {
     exit.castShadow = true;
     exit.receiveShadow = false;
     return exit;
-}
+}**/
 
 function create_portal(x, y) {
     var geometry = new THREE.BoxGeometry(PORTAL_X, PORTAL_Y, PORTAL_Z);
