@@ -9,7 +9,7 @@ function create_platform(x, y, w) {
     platform.position.set = (x, y, 0);
     platform.castShadow = true;
     platform.receiveShadow = false;
-    scene.add(platform);
+    return platform;
 }
 
 function setup_level(level) {
@@ -46,13 +46,14 @@ function setup_level(level) {
     scene.add(lights.ambient);
 
 
-    for (int i = 0; i < level0["platforms"].length; ++i) {
-        let tmp = level0["platforms"];
-        create_platform(tmp[0], tmp[1], tmp[2]);
-        
-        console.log("Created platform `i`: `tmp`");
-    }
+    console.log(level.platforms);
 
+    for (let i = 0; i < level.platforms.length; ++i) {
+        let tmp = level.platforms[i];
+        scene.add(create_platform(tmp[0], tmp[1], tmp[2]));
+        
+        console.log("Created platform %d: (%d, %d, %d)", i, tmp[0], tmp[1], tmp[2]);
+    }
 
     return {
         scene: scene,
