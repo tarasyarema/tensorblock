@@ -21,7 +21,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(logger('dev'));
 
-app.get('/', function (req, res) {
+app.get('/', (req, res) => {
     db.User.find({}, (err, doc) => {
         if (err) return err;
         else {
@@ -32,8 +32,28 @@ app.get('/', function (req, res) {
     });
 });
 
-app.get('/game', function (req, res) {
-    res.sendFile(__dirname + '/views/game.html');
+app.get('/game', (req, res) => {
+    res.render('game');
+});
+
+app.get('/register', (req, res) => {
+    res.render('register');
+});
+
+app.post('/register', (req, res) => {
+    let data = {
+        username: req.body.username,
+        level: Math.floor(Math.random()),
+        time: 0
+    }
+
+	db.User.create(data, (err, user) => {
+		if (err) throw err;
+		else {	
+            console.log(user._id);
+			res.redirect('/');
+        }
+    });
 });
 
 app.listen(3000, function () {
