@@ -56,6 +56,10 @@ app.post('/register', (req, res) => {
     });
 });
 
+app.get('/pingu_test', function (req, res) {
+    res.sendFile(__dirname + '/views/pingu_test.html');
+});
+
 app.listen(3000, function () {
 	console.log('Listening on http://localhost:3000');
 });
