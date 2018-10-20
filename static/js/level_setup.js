@@ -34,7 +34,7 @@ function setup_level(level) {
         directional_1: new THREE.DirectionalLight(0xff59ac, 0.2),
         directional_2: new THREE.DirectionalLight(0x00e1ff, 0.2),
         ambient: new THREE.AmbientLight(0xe2e2e2)
-    }
+    };
       
     lights.directional_1.position.set(50, 200, 100);
     lights.directional_1.castShadow = true;
