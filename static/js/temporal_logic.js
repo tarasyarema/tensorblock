@@ -1,5 +1,5 @@
 function register_event(func) {
-    var delta_t = Date.now() - START_TIME;
+    let delta_t = Date.now() - START_TIME;
     CURRENT_MOVEMENTS.push([delta_t, func])
 }
 
@@ -9,7 +9,7 @@ function register_run(Cube) {
     START_TIME = Date.now();
 
     // Reset Grabbable objects.
-    for (i = 0; i < BAR_SHAPES.length; ++i) {
+    for (let i = 0; i < BAR_SHAPES.length; ++i) {
         let pos = BAR_SHAPES[i];
         BARS[i].position.set(pos[0], pos[1], Cube.z);
         BARS[i].shape.width.set(pos[2]);
@@ -32,19 +32,19 @@ function run_future(Cube, scene) {
     }
 
     // Get last registered movement.
-    var last_movements = REGISTERED_MOVEMENTS.pop();
+    let last_movements = REGISTERED_MOVEMENTS.pop();
 
     // Get initial position.
-    var pos = last_movements[0];
+    let pos = last_movements[0];
     Cube.mat.position.set(pos[0], pos[1], 0);
     Cube.x = pos[0];
     Cube.y = pos[1];
     Cube.vx = pos[2];
     Cube.vy = pos[3];
 
-    var func, time_delta = 0;
+    let func, time_delta = 0;
 
-    for (var i = 1; i < last_movements.length; ++i) {
+    for (let i = 1; i < last_movements.length; ++i) {
         time_delta = last_movements[i][0];
         func = last_movements[i][1];
         setTimeout(func, time_delta, Cube);
