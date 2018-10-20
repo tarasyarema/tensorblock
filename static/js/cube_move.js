@@ -236,7 +236,7 @@ function update_cube(Cube, level, scene){
             WIN = true;
             TIME = START_TIME - Date.now();
             printCombo(0, 0, 0, 'WINNER', scene, 0x31ffe1);
-            $('.levels).css('display','block');
+            $('.levels').css('display','block');
         }
     }
 
