@@ -11,11 +11,15 @@ function register_run(Cube) {
     // Reset Grabbable objects.
     for (let i = 0; i < BAR_SHAPES.length; ++i) {
         let pos = BAR_SHAPES[i];
-        BARS[i].position.set(pos[0], pos[1], Cube.z);
-        BARS[i].shape.width.set(pos[2]);
+        BARS[i].position.x = pos[0];
+        BARS[i].position.y = pos[1];
+        BARS[i].geometry.parameters.width = pos[2];
         GRABBABLE_OBJECTS[i] = BARS[i];
+        GRABBABLE_OBJECTS[i].material.color.setHex(BAR_COLOR);
+
     }
 
+    NON_GRABBABLE_OBJECTS = [];
     GRABBED_OBJECT = null;
 }
 

@@ -15,6 +15,7 @@ var START_TIME;
 var MIN_INTER_TRAVEL_TIME = 2000;
 var EVENT_LISTENERS_ENABLED = true;
 var GRABBABLE_OBJECTS = [];
+var NON_GRABBABLE_OBJECTS = [];
 var GRABBED_OBJECT = null;
 
 
@@ -42,7 +43,7 @@ function key_down_up(Cube) {
  * react to key pressed.
  */
 function key_down_listener(event, Cube) {
-    var key;
+    let key;
     pingu_index = 0;
     
     // get key pressed.
@@ -148,42 +149,40 @@ function update_cube(Cube, level, scene){
         }
     }
 
-    for (let i = 0; i < BARS; ++i) {
-        let bar = BARS[i];
-        if (bar.color === PLATFORM_COLOR) {
-            let xmin = bar.position.x - bar.geometry.parameters.width / 2;
-            let xmax = bar.position.x + bar.geometry.parameters.width / 2;
-            let ymax = bar.position.y + BAR_Y / 2;
-            let ymin = bar.position.y - BAR_Y / 2;
+    for (let i = 0; i < NON_GRABBABLE_OBJECTS.length; ++i) {
+        let bar = NON_GRABBABLE_OBJECTS[i];
+        let xmin = bar.position.x - bar.geometry.parameters.width / 2;
+        let xmax = bar.position.x + bar.geometry.parameters.width / 2;
+        let ymax = bar.position.y + BAR_Y / 2;
+        let ymin = bar.position.y - BAR_Y / 2;
 
-            if (Cube.x - Cube.d / 2 <= xmax && Cube.x + Cube.d / 2 >= xmin) {
-                if (Cube.y - Cube.d / 2 <= ymax + EPSILON && Cube.y + Cube.d / 2 >= ymin) {
-                    if (Cube.vy <= 0) {
-                        is_on_platform = true;
-                        Cube.y = ymax + Cube.d / 2;
-                    } else {
-                        if (is_on_platform === false) {
-                            Cube.y = ymin - Cube.d / 2;
-                            Cube.vy = 0;
-                        }
+        if (Cube.x - Cube.d / 2 <= xmax && Cube.x + Cube.d / 2 >= xmin) {
+            if (Cube.y - Cube.d / 2 <= ymax + EPSILON && Cube.y + Cube.d / 2 >= ymin) {
+                if (Cube.vy <= 0) {
+                    is_on_platform = true;
+                    Cube.y = ymax + Cube.d / 2;
+                } else {
+                    if (is_on_platform === false) {
+                        Cube.y = ymin - Cube.d / 2;
+                        Cube.vy = 0;
                     }
                 }
-                else if (Math.max(Cube.y - Cube.d / 2, ymin) <= Math.min(Cube.y + Cube.d / 2, ymax)) {
-                    /**if (Cube.vx >= 0) {
-                    Cube.x = xmin - Cube.d / 2;
-                }
-                     else if (Cube.vx < 0) {
-                    Cube.x = xmax + Cube.d / 2;
-                }
-                     if (Cube.vy >= 0) {
-                    Cube.y = ymin - Cube.d / 2;
-                }
-                     else if (Cube.vy < 0) {
-                    Cube.y = ymax + Cube.d / 2;
-                }**/
-                    Cube.vx = 0;
-                    //Cube.vy = 0;
-                }
+            }
+            else if (Math.max(Cube.y - Cube.d / 2, ymin) <= Math.min(Cube.y + Cube.d / 2, ymax)) {
+                /**if (Cube.vx >= 0) {
+                Cube.x = xmin - Cube.d / 2;
+            }
+                 else if (Cube.vx < 0) {
+                Cube.x = xmax + Cube.d / 2;
+            }
+                 if (Cube.vy >= 0) {
+                Cube.y = ymin - Cube.d / 2;
+            }
+                 else if (Cube.vy < 0) {
+                Cube.y = ymax + Cube.d / 2;
+            }**/
+                Cube.vx = 0;
+                //Cube.vy = 0;
             }
         }
     }
