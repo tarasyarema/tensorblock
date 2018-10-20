@@ -5,6 +5,7 @@ const SPEED = 1;
 const VERTICAL_SPEED = 1.2;
 const GRAVITY = -0.1;
 const CUBE_COLOR = 0xff710d;
+const MIN_HEIGHT = -1000;
 
 
 var REGISTERED_MOVEMENTS = [];
@@ -37,25 +38,27 @@ function key_down_up(Cube) {
  */
 function key_down_listener(event, Cube) {
     var key;
-    register_key_down_event(event);
     pingu_index = 0;
     // get key pressed.
     key = event.key;
     // if left arrow key is pressed then , depending on 'ChangeYearOnKeyPress'
     // variable value we show previous page of bookmarks or of backgrounds
     if (key === "ArrowLeft") {
+        register_event(key_down_left);
         key_down_left(Cube);
     }
 
     // if right arrow key is pressed then , depending on 'ChangeYearOnKeyPress'
     // variable value we show next page of bookmarks or of backgrounds
     if (key === "ArrowRight") {
+        register_event(key_down_right);
         key_down_right(Cube);
     }
 
     // if right arrow key is pressed then , depending on 'ChangeYearOnKeyPress'
     // variable value we show next page of bookmarks or of backgrounds
     if (key === "ArrowUp") {
+        register_event(key_down_up);
         key_down_up(Cube)
     }
 }
@@ -72,13 +75,12 @@ function arrow_up(Cube) {
  */
 function key_up_listener(event, Cube) {
     var key;
-    register_key_up_event(event);
-    pingu_index = 0;
     // get key pressed.
     key = event.key;
     // if left arrow key is pressed then , depending on 'ChangeYearOnKeyPress'
     // variable value we show previous page of bookmarks or of backgrounds
     if (key === "ArrowLeft" || key === "ArrowRight") {
+        register_event(arrow_up);
         arrow_up(Cube)
     }
 }
@@ -88,6 +90,10 @@ function update_cube(Cube, level, scene){
     var platforms = level.platforms;
     Cube.x += Cube.vx;
     Cube.y += Cube.vy;
+
+    if (Cube.y <= MIN_HEIGHT) {
+        run_future(Cube)
+    }
 
     var is_on_platform = false;
     var platform;
@@ -182,6 +188,7 @@ function start_game(level){
     scene.add(Cube.mat);
 
     START_TIME = Date.now();
+    CURRENT_MOVEMENTS.push([0, identity]);
 
     //Add event listeners for cube moving.
     document.addEventListener('keydown', function (event){
