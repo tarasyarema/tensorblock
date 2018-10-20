@@ -12,58 +12,88 @@ var CURRENT_MOVEMENTS = [];
 var START_TIME;
 
 
+function key_down_left(Cube){
+    if (Cube.on_platform) {
+        Cube.vx -= HORIZONTAL_ACC;
+        Cube.vx = Math.max(Cube.vx, -SPEED);
+    }
+}
+
+function key_down_right(Cube){
+    if (Cube.on_platform) {
+        Cube.vx += HORIZONTAL_ACC;
+        Cube.vx = Math.min(Cube.vx, SPEED);
+    }
+}
+
+function key_down_up(Cube) {
+    if (Cube.on_platform) {
+        Cube.vy = VERTICAL_SPEED;
+    }
+}
+
 /**
  * react to key pressed.
  */
 function key_down_listener(event, Cube) {
     var key;
+    register_key_down_event(event);
     pingu_index = 0;
     // get key pressed.
     key = event.key;
     // if left arrow key is pressed then , depending on 'ChangeYearOnKeyPress'
     // variable value we show previous page of bookmarks or of backgrounds
     if (key === "ArrowLeft") {
+<<<<<<< HEAD
         //if (Cube.on_platform) {
             Cube.vx -= HORIZONTAL_ACC;
             Cube.vx = Math.max(Cube.vx, -SPEED);
         //}
+=======
+        key_down_left(Cube);
+>>>>>>> f8ca5a07fedd72ecb36fd60ad76c06e112f74a70
     }
 
     // if right arrow key is pressed then , depending on 'ChangeYearOnKeyPress'
     // variable value we show next page of bookmarks or of backgrounds
     if (key === "ArrowRight") {
+<<<<<<< HEAD
         //if (Cube.on_platform) {
             Cube.vx += HORIZONTAL_ACC;
             Cube.vx = Math.min(Cube.vx, SPEED);
         //}
+=======
+        key_down_right(Cube);
+>>>>>>> f8ca5a07fedd72ecb36fd60ad76c06e112f74a70
     }
 
     // if right arrow key is pressed then , depending on 'ChangeYearOnKeyPress'
     // variable value we show next page of bookmarks or of backgrounds
     if (key === "ArrowUp") {
-        if (Cube.on_platform) {
-            Cube.vy = VERTICAL_SPEED;
-        }
+        key_down_up(Cube)
     }
-    console.log(Cube)
 }
 
 
+function arrow_up(Cube) {
+    if (Cube.on_platform) {
+        Cube.vx = 0;
+    }
+}
 
 /**
  * react to key pressed.
  */
 function key_up_listener(event, Cube) {
     var key;
+    register_key_up_event(event);
     pingu_index = 0;
     // get key pressed.
     key = event.key;
     // if left arrow key is pressed then , depending on 'ChangeYearOnKeyPress'
     // variable value we show previous page of bookmarks or of backgrounds
     if (key === "ArrowLeft" || key === "ArrowRight") {
-        if (Cube.on_platform) {
-            Cube.vx = 0;
-        }
+        arrow_up(Cube)
     }
 }
 

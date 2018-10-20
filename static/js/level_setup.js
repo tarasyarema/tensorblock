@@ -10,6 +10,20 @@ const EXIT_COLOR = 0x070222;
 const PORTAL_COLOR = 0x022252;
 const PLATFORM_COLOR = 0xd0ff22;
 
+function mean_position(level) {
+    let min = 1000;
+    let max = -1000;
+
+    for (let i = 0; i < level.platforms.length; ++i) {
+        if (level.platforms[i][0] < min) min = level.platforms[i][0];
+        if (level.platforms[i][0] + level.platforms[i][2] > max) max = level.platforms[i][0] + level.platforms[i][2];
+    }
+
+    console.log(max, min);
+    console.log((max + min) / 2);
+    return (max + min) / 2;
+}
+
 function create_platform(x, y, w) {
     var geometry = new THREE.BoxGeometry(w, PLATFORM_Y, PLATFORM_Z);
     var material = new THREE.MeshPhongMaterial({ color: PLATFORM_COLOR, vertexColors: THREE.FaceColors });
@@ -58,7 +72,8 @@ function setup_level(level) {
     scene.background = new THREE.Color(back);
 
     var camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 1, 1000);
-    camera.position.z = 40;
+    camera.position.x = mean_position(level);
+    camera.position.z = 35;
 
     var renderer = new THREE.WebGLRenderer();
     renderer.setPixelRatio(window.devicePixelRatio);
