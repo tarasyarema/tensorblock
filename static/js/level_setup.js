@@ -221,7 +221,7 @@ function setup_level(level) {
 
     if (level.hor_bar !== null) {
         for (let i = 0; i < level.hor_bar.length; ++i) {
-            portal = level.hor_bar[i];
+            let portal = level.hor_bar[i];
             x = portal[0];
             y = portal[1];
             w = portal[2];
