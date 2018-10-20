@@ -247,6 +247,8 @@ function start_game(level){
     let scene = aux.scene;
     let camera = aux.camera;
     let renderer = aux.renderer;
+    let update_blockchain = aux.update_blockchain;
+    let update_tensorflow = aux.update_tensorflow;
 
     // Initilize grabbable objects.
     for (let i = 0; i < BARS.length; i++) {
@@ -298,6 +300,8 @@ function start_game(level){
     let render = function () {
         requestAnimationFrame(render);
         update_cube(Cube, level, scene, CUBE_COLOR);
+        update_blockchain();
+        update_tensorflow();
         renderer.render(scene, camera);
     };
 
