@@ -1,7 +1,9 @@
 const CUBE_EDGE = 2;
 const EPSILON = 0.7;
 const SPEED = 1;
-const GRAVITY = -0.25;
+const VERTICAL_SPEED = 1.2;
+const GRAVITY = -0.1;
+const CUBE_COLOR = 0Xff710d;
 
 
 /**
@@ -16,7 +18,7 @@ function key_down_listener(event, Cube) {
     // variable value we show previous page of bookmarks or of backgrounds
     if (key === "ArrowLeft") {
         if (Cube.on_platform) {
-            Cube.vx = SPEED;
+            Cube.vx = -SPEED;
         }
     }
 
@@ -24,7 +26,7 @@ function key_down_listener(event, Cube) {
     // variable value we show next page of bookmarks or of backgrounds
     if (key === "ArrowRight") {
         if (Cube.on_platform) {
-            Cube.vx = -SPEED;
+            Cube.vx = SPEED;
         }
     }
 
@@ -32,7 +34,7 @@ function key_down_listener(event, Cube) {
     // variable value we show next page of bookmarks or of backgrounds
     if (key === "ArrowUp") {
         if (Cube.on_platform) {
-            Cube.vy = SPEED;
+            Cube.vy = VERTICAL_SPEED;
         }
     }
     console.log(Cube)
@@ -51,12 +53,15 @@ function key_up_listener(event, Cube) {
     // if left arrow key is pressed then , depending on 'ChangeYearOnKeyPress'
     // variable value we show previous page of bookmarks or of backgrounds
     if (key === "ArrowLeft" || key === "ArrowRight") {
-        Cube.vx = 0;
+        if (Cube.on_platform) {
+            Cube.vx = 0;
+        }
     }
 }
 
 
-function update_cube(Cube, platforms){
+function update_cube(Cube, level){
+    var platforms = level.platforms;
     Cube.x += Cube.vx;
     Cube.y += Cube.vy;
 
@@ -66,32 +71,46 @@ function update_cube(Cube, platforms){
     var xmax;
     var ymax;
     var ymin;
-    // for (var i=0; i< platforms.length; i++){
-    //     platform = platforms[i];
-    //     xmin = platform[0] - platform[2]/2;
-    //     xmax = platform[0] + platform[2]/2;
-    //     ymax = platform[1];
-    //     ymin = platform[1] - EPSILON;
-    //     if (Cube.x-Cube.d/2 <= xmax && Cube.x + Cube.d/2 >= xmin && Math.abs(Cube.y-Cube.d/2 - ymax) <= EPSILON ){
-    //         is_on_platform = true;
-    //         Cube.y = ymax + Cube.d/2
-    //     }
-    //     if (Math.max(Cube.x - Cube.d/2, xmin) <= Math.min(Cube.x + Cube.d/2, xmax) &&
-    //         Math.max(Cube.y - Cube.d/2, ymin) <= Math.min(Cube.y + Cube.d/2, ymax)){
-    //         if (Cube.vx >= 0) {
-    //             Cube.x = xmin - Cube.d/2;
-    //         }
-    //         else if (Cube.vx < 0) {
-    //             Cube.x = xmax + Cube.d/2;
-    //         }
-    //         if (Cube.vy >= 0) {
-    //             Cube.y = ymin - Cube.d/2;
-    //         }
-    //         else if (Cube.vy < 0) {
-    //             Cube.y = ymax + Cube.d/2;
-    //         }
-    //     }
-    // }
+    for (var i=0; i< platforms.length; i++){
+        platform = platforms[i];
+        xmin = platform[0] - platform[2]/2;
+        xmax = platform[0] + platform[2]/2;
+        ymax = platform[1] + PLATFORM_Y/2;
+        ymin = platform[1] - PLATFORM_Y/2;
+        if (Cube.x-Cube.d/2 <= xmax && Cube.x + Cube.d/2 >= xmin) {
+            if (Cube.y - Cube.d / 2 <= ymax + EPSILON && Cube.y >= ymin) {
+                is_on_platform = true;
+                Cube.y = ymax + Cube.d / 2;
+            }
+            else if (Math.max(Cube.y - Cube.d/2, ymin) <= Math.min(Cube.y + Cube.d/2, ymax)) {
+                if (Cube.vx >= 0) {
+                    Cube.x = xmin - Cube.d / 2;
+                }
+                else if (Cube.vx < 0) {
+                    Cube.x = xmax + Cube.d / 2;
+                }
+                if (Cube.vy >= 0) {
+                    Cube.y = ymin - Cube.d / 2;
+                }
+                else if (Cube.vy < 0) {
+                    Cube.y = ymax + Cube.d / 2;
+                }
+                Cube.vx = 0;
+                Cube.vy = 0;
+            }
+        }
+    }
+
+    var exit = level.exit;
+    xmin = exit[0] - PORTAL_X/2;
+    xmax = exit[0] + PORTAL_X/2;
+    ymin = exit[1] - PORTAL_Y/2;
+    ymax = exit[1] + PORTAL_Y/2;
+    if (Cube.x-Cube.d/2 <= xmax && Cube.x + Cube.d/2 >= xmin &&
+        Cube.y-Cube.d/2 <= ymax && Cube.y + Cube.d/2 >= ymin) {
+
+        }
+    }
 
     //Store if the cube is on a platform or not.
     Cube.on_platform = is_on_platform;
@@ -101,10 +120,9 @@ function update_cube(Cube, platforms){
     }
     else {
         Cube.vy += GRAVITY;
-        Cube.vy = Math.min(Cube.vy, SPEED);
-        Cube.vy = Math.max(Cube.vy, -SPEED);
+        Cube.vy = Math.min(Cube.vy, VERTICAL_SPEED);
+        Cube.vy = Math.max(Cube.vy, -VERTICAL_SPEED);
     }
-    Cube.vy = 0;
 
     Cube.mat.position.set(Cube.x, Cube.y, Cube.z);
 }
@@ -117,14 +135,14 @@ function start_game(level){
     var renderer = aux.renderer;
 
     // Define cube and set initial position.
-    var material = new THREE.MeshPhongMaterial({color: 0xffd8eb});
+    var material = new THREE.MeshPhongMaterial({color: CUBE_COLOR});
     var geometry = new THREE.BoxGeometry(CUBE_EDGE, CUBE_EDGE, CUBE_EDGE);
     for(var i = 0; i < geometry.faces.length; ++i){
-        geometry.faces[i].color.setHex(Math.random() * 0xffffff);
+        geometry.faces[i].color.setHex(Math.random() * 0xaa710d);
     }
     var Cube = {mat: new THREE.Mesh(geometry, material),
                 x: level.init[0],
-                y: level.init[1],
+                y: level.init[1] + CUBE_EDGE/2+PLATFORM_Y/2,
                 z: 0,
                 on_platform: false,
                 vx: 0,
@@ -143,17 +161,14 @@ function start_game(level){
         key_down_listener(event, Cube);
     });
 
-    document.addEventListener('onkeyup', function (event){
+    document.addEventListener('keyup', function (event){
         key_up_listener(event, Cube);
     });
 
     // Creating render function.
-    var controls = new THREE.OrbitControls(camera);
-    controls.addEventListener('change', render);
     var render = function () {
         requestAnimationFrame(render);
-        update_cube(Cube, level.platforms);
-        controls.update();
+        update_cube(Cube, level);
         renderer.render(scene, camera);
     };
 

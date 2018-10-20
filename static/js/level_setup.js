@@ -1,15 +1,37 @@
-const PLATFORM_Y = 0.5;
+const PLATFORM_Y = 1;
 const PLATFORM_Z = 2;
+const PORTAL_X = 0.75;
+const PORTAL_Y = 4;
+const PORTAL_Z = 2;
+const EXIT_COLOR = 0x070222;
+const PLATFORM_COLOR = 0xd0ff22;
 
 function create_platform(x, y, w) {
     var geometry = new THREE.BoxGeometry(w, PLATFORM_Y, PLATFORM_Z);
-    var material = new THREE.MeshPhongMaterial({ color: 0xffffff, vertexColors: THREE.FaceColors }); 
+    var material = new THREE.MeshPhongMaterial({ color: PLATFORM_COLOR, vertexColors: THREE.FaceColors });
     var platform =  new THREE.Mesh(geometry, material);
+    for(var i = 0; i < geometry.faces.length; ++i){
+        geometry.faces[i].color.setHex(Math.random() * PLATFORM_COLOR);
+    }
 
     platform.position.set(x, y, 0);
     platform.castShadow = true;
     platform.receiveShadow = false;
     return platform;
+}
+
+function create_portal(x, y) {
+    var geometry = new THREE.BoxGeometry(PORTAL_X, PORTAL_Y, PORTAL_Z);
+    var material = new THREE.MeshPhongMaterial({ color: EXIT_COLOR, vertexColors: THREE.FaceColors });
+    var portal =  new THREE.Mesh(geometry, material);
+    for(var i = 0; i < geometry.faces.length; ++i){
+        geometry.faces[i].color.setHex(Math.random() * EXIT_COLOR);
+    }
+
+    portal.position.set(x, y+PORTAL_Y/2+PLATFORM_Y/2, 0);
+    portal.castShadow = true;
+    portal.receiveShadow = false;
+    return portal;
 }
 
 function setup_level(level) {
@@ -18,7 +40,7 @@ function setup_level(level) {
     scene.background = new THREE.Color(back);
 
     var camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 1, 1000);
-    camera.position.z = 20;
+    camera.position.z = 40;
 
     var renderer = new THREE.WebGLRenderer();
     renderer.setPixelRatio(window.devicePixelRatio);
@@ -30,7 +52,6 @@ function setup_level(level) {
     document.body.appendChild(renderer.domElement);
 
     // Setup lights!
-
     var lights = {
         directional_1: new THREE.DirectionalLight(0xff59ac, 0.2),
         directional_2: new THREE.DirectionalLight(0x00e1ff, 0.2),
@@ -40,13 +61,13 @@ function setup_level(level) {
     lights.directional_1.position.set(50, 200, 100);
     lights.directional_1.castShadow = true;
     scene.add(lights.directional_1);
-    lights.directional_2.position.set(10, 200, -100);
+    lights.directional_2.position.set(10, 100, -100);
     lights.directional_2.castShadow = true;
     scene.add(lights.directional_2);
     lights.ambient.castShadow = true;
     scene.add(lights.ambient);
 
-
+    // Draw platforms.
     var platform;
     var x;
     var y;
@@ -58,6 +79,11 @@ function setup_level(level) {
         w = platform[2];
         scene.add(create_platform(x, y, w));
     }
+
+    // Draw platform.
+    scene.add(create_portal(level.exit[0], level.exit[1]));
+
+
 
     return {
         scene: scene,
