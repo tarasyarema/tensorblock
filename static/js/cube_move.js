@@ -1,7 +1,7 @@
 const CUBE_EDGE = 2;
 const EPSILON = 0.7;
-const HORIZONTAL_ACC = 0.2;
-const SPEED = 1;
+//const HORIZONTAL_ACC = 0.2;
+const SPEED = 0.4;
 const VERTICAL_SPEED = 1.2;
 const GRAVITY = -0.08;
 const CUBE_COLOR = 0xff710d;
@@ -14,17 +14,17 @@ var START_TIME;
 
 
 function key_down_left(Cube){
-    if (Cube.on_platform) {
-        Cube.vx -= HORIZONTAL_ACC;
-        Cube.vx = Math.max(Cube.vx, -SPEED);
-    }
+    //if (Cube.on_platform) {
+        Cube.vx = -SPEED;
+        //Cube.vx = Math.max(Cube.vx, -SPEED);
+    //}
 }
 
 function key_down_right(Cube){
-    if (Cube.on_platform) {
-        Cube.vx += HORIZONTAL_ACC;
-        Cube.vx = Math.min(Cube.vx, SPEED);
-    }
+    //if (Cube.on_platform) {
+        Cube.vx = SPEED;
+        //Cube.vx = Math.min(Cube.vx, SPEED);
+    //}
 }
 
 function key_down_up(Cube) {
@@ -61,6 +61,7 @@ function key_down_listener(event, Cube) {
         register_event(key_down_up);
         key_down_up(Cube)
     }
+	console.log(Cube.vx, Cube.vy);
 }
 
 
@@ -111,6 +112,9 @@ function update_cube(Cube, level, scene){
             if (Cube.y - Cube.d / 2 <= ymax + EPSILON && Cube.y >= ymin) {
                 is_on_platform = true;
                 Cube.y = ymax + Cube.d / 2;
+				if(Cube.vy <= -0.5){
+					Cube.vx = 0;
+				}
             }
             else if (Math.max(Cube.y - Cube.d/2, ymin) <= Math.min(Cube.y + Cube.d/2, ymax)) {
                 if (Cube.vx >= 0) {
