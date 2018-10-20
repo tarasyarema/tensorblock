@@ -116,6 +116,17 @@ function setup_level(level) {
     // Draw exit.
     scene.add(create_exit(level.exit[0], level.exit[1]));
 
+    //Draw portals.
+    var portal;
+    if (level.portal !== null) {
+        for (i = 0; i < level.portal.length; ++i) {
+            portal = level.portal[i];
+            x = portal[0];
+            y = portal[1];
+            w = portal[2];
+            scene.add(create_portal(x, y, w));
+        }
+    }
 
 
     return {
