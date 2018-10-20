@@ -7,6 +7,27 @@ function register_run(Cube) {
     REGISTERED_MOVEMENTS.push(CURRENT_MOVEMENTS);
     CURRENT_MOVEMENTS = [[Cube.x, Cube.y, Cube.vx, Cube.vy]];
     START_TIME = Date.now();
+
+    // Reset grabbable objects.
+    for (var i = 0; i < BARS.length; i++) {
+        GRABBABLE_OBJECTS[i] = BARS[i];
+    }
+
+    // Reset Grabbable objects.
+    var pos;
+    var x;
+    var y;
+    var w;
+    for (i = 0; i < BAR_SHAPES.length; ++i) {
+        pos = BAR_SHAPES[i];
+        x = pos[0];
+        y = pos[1];
+        w = pos[2];
+        BARS[i].position.set(x, y);
+        BARS[i].shape.width.set(w);
+        GRABBABLE_OBJECTS[i] = BARS[i]
+    }
+    GRABBED_OBJECT = null;
 }
 
 function enable_event_listener(){

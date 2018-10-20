@@ -6,10 +6,16 @@ const EXIT_Z = 2;
 const PORTAL_X = 0.75;
 const PORTAL_Y = 4;
 const PORTAL_Z = 2;
+const BAR_Y = 1;
+const BAR_Z = 2;
 const EXIT_COLOR = 0x070222;
 const PORTAL_COLOR = 0x022252;
 const PLATFORM_COLOR = 0xd0ff22;
+const BAR_COLOR = 0x666666;
 const CUBE_DIMENSION = 0.1;
+
+var BARS = [];
+var BAR_SHAPES = [];
 
 var exit_boxes;
 
@@ -68,7 +74,7 @@ function create_platform(x, y, w) {
 function create_exit(x, y, scene) {
     var pos = [x,y,0];
     var grid = create_grid(pos[0], pos[1], pos[2], door_width, door_height);
-    
+
     console.log(pos);
     console.log(grid);
 
@@ -83,9 +89,23 @@ function create_exit(x, y, scene) {
         }
     }
 }
-	
-	
-/**	
+
+function create_bar(x, y, w) {
+    var geometry = new THREE.BoxGeometry(w, BAR_Y, BAR_Z);
+    var material = new THREE.MeshPhongMaterial({ color: BAR_COLOR, vertexColors: THREE.FaceColors });
+    var bar =  new THREE.Mesh(geometry, material);
+    for(var i = 0; i < geometry.faces.length; ++i){
+        geometry.faces[i].color.setHex(Math.random() * BAR_COLOR);
+    }
+
+    bar.position.set(x, y, 0);
+    bar.castShadow = true;
+    bar.receiveShadow = false;
+    return bar;
+}
+
+
+/**
     var geometry = new THREE.BoxGeometry(EXIT_X, EXIT_Y, EXIT_Z);
     var material = new THREE.MeshPhongMaterial({ color: EXIT_COLOR, vertexColors: THREE.FaceColors });
     var exit =  new THREE.Mesh(geometry, material);
@@ -173,6 +193,20 @@ function setup_level(level) {
             y = portal[1];
             w = portal[2];
             scene.add(create_portal(x, y, w));
+        }
+    }
+
+    if (level.hor_bar !== null) {
+        var bar;
+        for (i = 0; i < level.hor_bar.length; ++i) {
+            portal = level.hor_bar[i];
+            x = portal[0];
+            y = portal[1];
+            w = portal[2];
+            BAR_SHAPES.push([x, y, w]);
+            bar = create_bar(x, y, w);
+            scene.add(bar);
+            BARS.push(bar)
         }
     }
 

@@ -14,6 +14,8 @@ var CURRENT_MOVEMENTS = [];
 var START_TIME;
 var MIN_INTER_TRAVEL_TIME = 1000;
 var EVENT_LISTENERS_ENABLED = true;
+var GRABBABLE_OBJECTS = [];
+var GRABBED_OBJECT = null;
 
 
 function key_down_left(Cube){
@@ -64,7 +66,13 @@ function key_down_listener(event, Cube) {
         register_event(key_down_up);
         key_down_up(Cube)
     }
-	console.log(Cube.vx, Cube.vy);
+
+    // if right arrow key is pressed then , depending on 'ChangeYearOnKeyPress'
+    // variable value we show next page of bookmarks or of backgrounds
+    if (key === "backspace" && EVENT_LISTENERS_ENABLED) {
+        register_event(key_down_backspace);
+        key_down_backspace(Cube)
+    }
 }
 
 
@@ -117,7 +125,7 @@ function update_cube(Cube, level, scene){
 					is_on_platform = true;
 					Cube.y = ymax + Cube.d / 2;
 				}else{
-					if(is_on_platform == false){
+					if(is_on_platform === false){
 						Cube.y = ymin - Cube.d / 2;
 						Cube.vy = 0;
 					}
@@ -195,10 +203,15 @@ function start_game(level){
     var camera = aux.camera;
     var renderer = aux.renderer;
 
+    // Initilize grabbable objects.
+    for (var i = 0; i < BARS.length; i++) {
+        GRABBABLE_OBJECTS[i] = BARS[i];
+    }
+
     // Define cube and set initial position.
     var material = new THREE.MeshPhongMaterial({color: CUBE_COLOR});
     var geometry = new THREE.BoxGeometry(CUBE_EDGE, CUBE_EDGE, CUBE_EDGE);
-    for(var i = 0; i < geometry.faces.length; ++i){
+    for(i = 0; i < geometry.faces.length; ++i){
         geometry.faces[i].color.setHex(Math.random() * 0xaa710d);
     }
     var Cube = {mat: new THREE.Mesh(geometry, material),
