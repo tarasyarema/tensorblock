@@ -6,6 +6,10 @@ const GRAVITY = -0.1;
 const CUBE_COLOR = 0Xff710d;
 
 
+var REGISTERED_MOVEMENTS = [];
+var CURRENT_MOVEMENTS = [];
+
+
 /**
  * react to key pressed.
  */
@@ -60,7 +64,7 @@ function key_up_listener(event, Cube) {
 }
 
 
-function update_cube(Cube, level){
+function update_cube(Cube, level, scene){
     var platforms = level.platforms;
     Cube.x += Cube.vx;
     Cube.y += Cube.vy;
@@ -108,8 +112,7 @@ function update_cube(Cube, level){
     ymax = exit[1] + PORTAL_Y/2;
     if (Cube.x-Cube.d/2 <= xmax && Cube.x + Cube.d/2 >= xmin &&
         Cube.y-Cube.d/2 <= ymax && Cube.y + Cube.d/2 >= ymin) {
-
-        }
+            printCombo (0, 0, 0, 'WINNER', scene, 0x31ffe1)
     }
 
     //Store if the cube is on a platform or not.
@@ -168,7 +171,7 @@ function start_game(level){
     // Creating render function.
     var render = function () {
         requestAnimationFrame(render);
-        update_cube(Cube, level);
+        update_cube(Cube, level, scene);
         renderer.render(scene, camera);
     };
 

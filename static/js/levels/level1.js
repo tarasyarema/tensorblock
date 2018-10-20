@@ -1,9 +1,9 @@
 const level1 = {
-	"platforms": [[0, 1, 2]],
-	"portal": [1, 1],
-	"exit": [0,0],
-	"init": [1,1],
-	"hor_bar": [[0,1,2]],
-	"ver_bar": [[0,1,2]],
-	"spikes_lever":[[0,0,1,2,2]]
-}
+	"platforms": [[-2, 2, 12], [7, -3, 8], [7, 2, 6]],
+	"portal": [7, -3],
+	"exit": [13, -3],
+	"init": [-2, 2],
+	"hor_bar": [[5,-3,2]],
+	"ver_bar": null,
+	"spikes_lever":null
+};
