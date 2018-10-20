@@ -12,13 +12,10 @@ const EXIT_COLOR = 0xdd73ff;
 const PORTAL_COLOR = 0xffdd73;
 const PLATFORM_COLOR = 0x262326;
 const BAR_COLOR = 0x666666;
-const CUBE_DIMENSION = 0.1;
 const CAMERA_Z = 35;
 
 var BARS = [];
 var BAR_SHAPES = [];
-
-var exit_boxes;
 
 function mean_x(level) {
     var min = 1000;
@@ -44,32 +41,6 @@ function mean_y(level) {
     return (max + min) / 2;
 }
 
-function create_cube(x, y, z, col, scene) {
-    var geometry = new THREE.BoxGeometry(CUBE_DIMENSION, CUBE_DIMENSION, CUBE_DIMENSION);
-    var material = new THREE.MeshPhongMaterial( {color: col} );
-    var cube = new THREE.Mesh( geometry, material );
-    cube.position.x = x;
-    cube.position.y = y;
-    cube.position.z = z;
-    cube.castShadow = false;
-    cube.receiveShadow = true;
-    scene.add( cube );
-    return cube;
-}
-
-function create_grid (x, y, z, height, width) {
-    var pos = [];
-    for (var i = 0; i < width; ++i) 
-        pos[i] = [[],[],[]];
-
-    pos[0][0] = [x,y,z];
-    for (i = 0; i < height; ++i)
-        for (var j=0; j < width; ++j)
-            pos[i][j] = [ CUBE_DIMENSION * (i + x), CUBE_DIMENSION * (y - j), z ];
-
-    return pos;
-}
-
 function create_platform(x, y, w) {
     var geometry = new THREE.BoxGeometry(w, PLATFORM_Y, PLATFORM_Z);
     var material = new THREE.MeshPhongMaterial({ color: PLATFORM_COLOR }); //, vertexColors: THREE.FaceColors });
@@ -81,25 +52,6 @@ function create_platform(x, y, w) {
     platform.castShadow = true;
     platform.receiveShadow = false;
     return platform;
-}
-
-function create_exit(x, y, scene) {
-    var pos = [x,y,0];
-    var grid = create_grid(pos[0], pos[1], pos[2], door_width, door_height);
-
-    console.log(pos);
-    console.log(grid);
-
-    exit_boxes = [];
-    for (var i = 0; i < door_height; ++i) {
-        for (var j = 0; j < door_width; ++j) {
-            if (exit_door[door_width*i + j] !== 0x000000 && exit_door[door_width*i + j] !== 0xffffff){
-                // console.log(j, i, grid[j][i]);
-                exit_boxes.push(create_cube(grid[j][i][0], grid[j][i][1], grid[j][i][2],
-                                               exit_door[door_width*i + j], scene));
-            }
-        }
-    }
 }
 
 function create_bar(x, y, w) {
@@ -132,15 +84,15 @@ function create_bar(x, y, w) {
     return exit;
 }**/
 
-function create_portal(x, y, color) {
-    var geometry = new THREE.BoxGeometry(PORTAL_X, PORTAL_Y, PORTAL_Z);
+function create_portal_exit(x, y, color, w, h, d) {
+    var geometry = new THREE.BoxGeometry(w, h, d);
     var material = new THREE.MeshPhongMaterial({ color: color });
     var exit =  new THREE.Mesh(geometry, material);
 
     for (var i = 0; i < geometry.faces.length; ++i)
         geometry.faces[i].color.setHex(Math.random() * PORTAL_COLOR);
 
-    exit.position.set(x, y + EXIT_Y / 2 + PLATFORM_Y / 2, 0);
+    exit.position.set(x, y + h / 2 + PLATFORM_Y / 2, 0);
     exit.castShadow = true;
     exit.receiveShadow = false;
 
@@ -198,16 +150,16 @@ function setup_level(level) {
     if (level.portals !== null) {
         for (let i=0; i < level.portals.length; i++) {
             let portal = level.portals[i];
-            scene.add(create_portal(portal[0], portal[1], PORTAL_COLOR));
+            scene.add(create_portal_exit(portal[0], portal[1], PORTAL_COLOR, PORTAL_X, PORTAL_Y, PORTAL_Z));
         }
     }
 
-    scene.add(create_portal(level.exit[0], level.exit[1], EXIT_COLOR));
+    scene.add(create_portal_exit(level.exit[0], level.exit[1], EXIT_COLOR, EXIT_X, EXIT_Y, EXIT_Z));
 
 
     // Draw loles
-    printCombo(110, 105, -150, "blockchain", scene, 0x412432);
-    printCombo(-95, 125, -150, "tensorflow", scene, 0xfe123d);
+    let update_blockchain = dinamicPrintCombo(110, 105, -150, "blockchain", scene, 0x412432);
+    let update_tensorflow = dinamicPrintCombo(-95, 125, -150, "tensorflow", scene, 0xfe123d);
 
     /*
     Draw portals.
@@ -240,6 +192,8 @@ function setup_level(level) {
     return {
         scene: scene,
         camera: camera,
-        renderer: renderer
+        renderer: renderer,
+        update_blockchain: update_blockchain,
+        update_tensorflow: update_tensorflow
     };
 }

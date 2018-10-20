@@ -153,8 +153,8 @@ function update_cube(Cube, level, scene){
         let bar = NON_GRABBABLE_OBJECTS[i];
         let xmin = bar.position.x - bar.geometry.parameters.width / 2;
         let xmax = bar.position.x + bar.geometry.parameters.width / 2;
-        let ymax = bar.position.y + BAR_Y / 2;
         let ymin = bar.position.y - BAR_Y / 2;
+        let ymax = bar.position.y + BAR_Y / 2;
 
         if (Cube.x - Cube.d / 2 <= xmax && Cube.x + Cube.d / 2 >= xmin) {
             if (Cube.y - Cube.d / 2 <= ymax + EPSILON && Cube.y + Cube.d / 2 >= ymin) {
@@ -225,13 +225,13 @@ function update_cube(Cube, level, scene){
         GRABBED_OBJECT.position.set(Cube.x, Cube.y + Cube.d/2+ BAR_Y/2, Cube.z);
 
     let exit = level.exit;
-    xmin = exit[0] - EXIT_X/2;
-    xmax = exit[0] + EXIT_X/2;
-    ymin = exit[1] - EXIT_Y/2;
-    ymax = exit[1] + EXIT_Y/2;
+    let xmin = exit[0] - EXIT_X/2;
+    let xmax = exit[0] + EXIT_X/2;
+    let ymin = exit[1] + PLATFORM_Y / 2;
+    let ymax = exit[1] + EXIT_Y + PLATFORM_Y / 2;
 
-    if (Cube.x-Cube.d/2 <= xmax && Cube.x + Cube.d/2 >= xmin &&
-        Cube.y-Cube.d/2 <= ymax && Cube.y + Cube.d/2 >= ymin) {
+    if (Cube.x-Cube.d/2 < xmax && Cube.x + Cube.d/2 > xmin &&
+        Cube.y-Cube.d/2 < ymax && Cube.y + Cube.d/2 > ymin) {
         if (REGISTERED_MOVEMENTS.length === 0 && WIN === false) {
             WIN = true;
             TIME = START_TIME - Date.now();
@@ -247,6 +247,8 @@ function start_game(level){
     let scene = aux.scene;
     let camera = aux.camera;
     let renderer = aux.renderer;
+    let update_blockchain = aux.update_blockchain;
+    let update_tensorflow = aux.update_tensorflow;
 
     // Initilize grabbable objects.
     for (let i = 0; i < BARS.length; i++) {
@@ -298,6 +300,8 @@ function start_game(level){
     let render = function () {
         requestAnimationFrame(render);
         update_cube(Cube, level, scene, CUBE_COLOR);
+        update_blockchain();
+        update_tensorflow();
         renderer.render(scene, camera);
     };
 

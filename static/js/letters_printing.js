@@ -8,6 +8,10 @@ function creaCube(x, y, z, scene, col) {
     cube.castShadow = false;
     cube.receiveShadow = true;
     scene.add(cube);
+    return {box: cube,
+        x: x,
+        y: y,
+        z: z};
 }
 
 function creaGrid (x, y, z) {
@@ -41,13 +45,15 @@ function normalizePos( x, y, z) {
 function printLetter (x, y, z, n, scene, col) {
     var pos = normalizePos(x, y, z);
     var grid = creaGrid(pos[0], pos[1], pos[2]);
+    var letter = [];
     for (var i = 0; i < asciiChars[n].length; ++i) {
         for (var j = 0; j < asciiChars[n][0].length; ++j) {
             if (asciiChars[n][j][i]!=0){
-                creaCube(grid[i][j][0], grid[i][j][1], grid[i][j][2], scene, col);
+                letter.push(creaCube(grid[i][j][0], grid[i][j][1], grid[i][j][2], scene, col));
             }
         }
     }
+    return letter;
 }
 
 function str2Num (str) {
@@ -67,7 +73,45 @@ function printCombo ( x, y, z, letts, scene, col) {
     var nums = str2Num(letts);
     var i, it = 5 * 1.3;
     var temp = (nums.length * it) / 2;
+    var letters = [];
     for (i = 0; i < nums.length; ++i) {
-        printLetter(x - temp + (i * it), y, z, nums[i], scene, col);
+        letters.push(printLetter(x - temp + (i * it), y, z, nums[i], scene, col));
     }
+    return letters
+}
+
+
+function dinamicPrintCombo (x, y, z, letts, scene, col) {
+    var letters = printCombo(x, y, z, letts, scene, col);
+    var Combo = {letters: letters,
+                 vx: Math.random() - 0.5,
+                 vy: Math.random() - 0.5,
+                 x: x,
+                 y: y};
+
+    return function () {
+        if (Combo.x + Combo.vx>= window.innerWidth / 4 ||
+            Combo.x + Combo.vx<= -window.innerWidth / 4) {
+            Combo.vx = -Combo.vx;
+        }
+        if (Combo.y + Combo.vy >= window.innerHeight / 4 ||
+            Combo.y + Combo.vy <= -window.innerHeight / 4) {
+            Combo.vy = -Combo.vy;
+        }
+        Combo.x += Combo.vx;
+        Combo.y += Combo.vy;
+
+        for (let i = 0; i < Combo.letters.length; i++) {
+            let letter = Combo.letters[i];
+            let rnd_x = Math.random() - 0.5;
+            let rnd_y = Math.random() - 0.5;
+            let rnd_z = Math.random() - 0.5;
+            for (let j = 0; j < letter.length; j++) {
+                let box = letter[j];
+                box.box.position.set(box.x + rnd_x, box.y + rnd_y, box.z + rnd_z);
+                box.x += Combo.vx;
+                box.y += Combo.vy;
+            }
+        }
+    };
 }
