@@ -5,5 +5,6 @@ const level1 = {
 	"init": [-2, 2],
 	"hor_bar": [[16,-3,2]],
 	"ver_bar": null,
-	"spikes_lever":null
+	"spikes_lever":null,
+    "id": 1
 };
