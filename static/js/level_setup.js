@@ -54,6 +54,19 @@ function create_platform(x, y, w) {
     return platform;
 }
 
+function create_vertical_platform(x, y, w) {
+    var geometry = new THREE.BoxGeometry(PLATFORM_Y, w, PLATFORM_Z);
+    var material = new THREE.MeshPhongMaterial({ color: PLATFORM_COLOR }); //, vertexColors: THREE.FaceColors });
+    var platform =  new THREE.Mesh(geometry, material);
+    for (var i = 0; i < geometry.faces.length; ++i)
+        geometry.faces[i].color.setHex(Math.random() * PLATFORM_COLOR);
+
+    platform.position.set(x, y, 0);
+    platform.castShadow = true;
+    platform.receiveShadow = false;
+    return platform;
+}
+
 function create_bar(x, y, w) {
     var geometry = new THREE.BoxGeometry(w, BAR_Y, BAR_Z);
     var material = new THREE.MeshPhongMaterial({ color: BAR_COLOR });
@@ -134,16 +147,22 @@ function setup_level(level) {
     scene.add(lights.ambient);
 
     // Draw platforms.
-    var platform;
-    var x;
-    var y;
-    var w;
-    for (var i = 0; i < level.platforms.length; ++i) {
-        platform = level.platforms[i];
-        x = platform[0];
-        y = platform[1];
-        w = platform[2];
+    for (let i = 0; i < level.platforms.length; ++i) {
+        let platform = level.platforms[i];
+        let x = platform[0];
+        let y = platform[1];
+        let w = platform[2];
         scene.add(create_platform(x, y, w));
+    }
+
+    if (level.ver_bar !== null) {
+        for (let i = 0; i < level.ver_bar.length; ++i) {
+            let platform = level.ver_bar[i];
+            let x = platform[0];
+            let y = platform[1];
+            let w = platform[2];
+            scene.add(create_vertical_platform(x, y, w));
+        }
     }
 
     // Draw exit.
