@@ -270,6 +270,12 @@ function start_game(level){
     let update_blockchain = aux.update_blockchain;
     let update_tensorflow = aux.update_tensorflow;
     let update_p_adics = aux.update_p_adics;
+    let update_galois = aux.update_galois;
+    let update_hilbert = aux.update_hilbert;
+    let update_turing = aux.update_turing;
+    let update_euler = aux.update_euler;
+    let update_gauss = aux.update_gauss;
+    let update_erdos = aux.update_erdos;
 
     // Initilize grabbable objects.
     for (let i = 0; i < BARS.length; i++) {
@@ -324,6 +330,12 @@ function start_game(level){
         update_blockchain();
         update_tensorflow();
         update_p_adics();
+        update_galois();
+        update_hilbert();
+        update_turing();
+        update_euler();
+        update_gauss();
+        update_erdos();
         renderer.render(scene, camera);
     };
 
