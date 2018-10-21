@@ -276,6 +276,7 @@ function start_game(level){
     let update_euler = aux.update_euler;
     let update_gauss = aux.update_gauss;
     let update_erdos = aux.update_erdos;
+    let update_wolfram = aux.update_wolfram;
 
     // Initilize grabbable objects.
     for (let i = 0; i < BARS.length; i++) {
@@ -337,6 +338,7 @@ function start_game(level){
         update_euler();
         update_gauss();
         update_erdos();
+        update_wolfram();
         renderer.render(scene, camera);
     };
 
