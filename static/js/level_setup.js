@@ -179,7 +179,13 @@ function setup_level(level) {
     // Draw loles
     let update_blockchain = dinamicPrintCombo(110, 105, -150, "blockchain", scene, 0x412432);
     let update_tensorflow = dinamicPrintCombo(-95, 125, -150, "tensorflow", scene, 0xfe123d);
-    let update_p_adics = dinamicPrintCombo(10, -125, -150, "p-adic", scene, 0xd61394);
+    let update_p_adics = dinamicPrintCombo(95, -125, -150, "p-adic", scene, 0xd61394);
+    let update_galois = dinamicPrintCombo(-110, -105, -150, "Galois", scene, 0x01ff00);
+    let update_hilbert = dinamicPrintCombo(0, 0, -150, "Hilbert", scene, 0x888888);
+    let update_turing = dinamicPrintCombo(-80, 82, -150, "Turing", scene, 0x0092ff);
+    let update_erdos = dinamicPrintCombo(-117, 15, -150, "Erdos", scene, 0x20ff9a);
+    let update_gauss = dinamicPrintCombo(14, -123, -150, "Gauss", scene, 0xff85dc);
+    let update_euler = dinamicPrintCombo(-7, 53, -150, "Euler", scene, 0x9eff00);
 
     /*
     Draw portals.
@@ -215,6 +221,12 @@ function setup_level(level) {
         renderer: renderer,
         update_blockchain: update_blockchain,
         update_tensorflow: update_tensorflow,
-        update_p_adics: update_p_adics
+        update_p_adics: update_p_adics,
+        update_galois: update_galois,
+        update_hilbert: update_hilbert,
+        update_turing: update_turing,
+        update_euler: update_euler,
+        update_gauss: update_gauss,
+        update_erdos: update_erdos
     };
 }

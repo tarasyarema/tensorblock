@@ -90,12 +90,12 @@ function dinamicPrintCombo (x, y, z, letts, scene, col) {
                  y: y};
 
     return function () {
-        if (Combo.x + Combo.vx>= window.innerWidth / 4 ||
-            Combo.x + Combo.vx<= -window.innerWidth / 4) {
+        if (Combo.x + Combo.vx>= window.innerWidth / 6 ||
+            Combo.x + Combo.vx<= -window.innerWidth / 6) {
             Combo.vx = -Combo.vx;
         }
-        if (Combo.y + Combo.vy >= window.innerHeight / 4 ||
-            Combo.y + Combo.vy <= -window.innerHeight / 4) {
+        if (Combo.y + Combo.vy >= window.innerHeight / 6 ||
+            Combo.y + Combo.vy <= -window.innerHeight / 6) {
             Combo.vy = -Combo.vy;
         }
         Combo.x += Combo.vx;
