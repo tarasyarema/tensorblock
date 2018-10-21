@@ -26,6 +26,8 @@
 <script type="text/javascript" src="js/levels/level1.js"></script>
 <script type="text/javascript" src="js/levels/level2.js"></script>
 <script type="text/javascript" src="js/levels/level3.js"></script>
+<script type="text/javascript" src="js/levels/level4.js"></script>
+<script type="text/javascript" src="js/levels/level5.js"></script>
 <script type="text/javascript" src="js/pick_up_stuff.js"></script>
 <script type="text/javascript" src="js/cube_move.js"></script>
 <script type="text/javascript" src="js/level_setup.js"></script>
@@ -42,6 +44,9 @@
 <ul class="nav justify-content-center">
     <li class="nav-item">
         <a id="stage" class="nav-link disabled" style="color: darkviolet"></a>
+    </li>
+    <li class="nav-item">
+        <a id="time" class="nav-link disabled" style="color: darkviolet"></a>
     </li>
     <li class="nav-item">
         <a class="nav-link active" href="/">Ranking</a>
@@ -64,7 +69,7 @@
 
 <script>
     const id = <%= lvl %>;
-    const levels = [ level0, level1, level2, level3 ];
+    const levels = [ level0, level1, level2, level3 , level4, level5 ];
     $('#stage').append('<b>Level ' + String(id) + '</b>');
     start_game(levels[id]);
 </script>

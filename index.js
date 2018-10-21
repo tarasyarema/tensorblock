@@ -68,19 +68,14 @@ app.post('/register', (req, res) => {
         level5: req.cookies.Level5 == 'true' ? true : false
     }
 
-    console.log("Data: ");
+    console.log("Data to POST: ");
     console.log(data);
 
     db.User.findOne({ username: req.body.username }, (err, doc) => {
-        if (err) {
-            db.User.create(data, (err, user) => {
-                if (err) throw err;
-                else {
-                    console.log("Created user.");
-                    res.redirect('/');
-                }
-            });
-        } else {
+        if (err) return err;
+        if (doc != null) {
+            console.log(doc);
+            
             doc.level0 = data.level0;
             doc.level1 = data.level1;
             doc.level2 = data.level2;
@@ -90,14 +85,19 @@ app.post('/register', (req, res) => {
 
             doc.save((err, raw) => {
                 if (err) return err;
-
-                console.log("Updated user: ");
+                console.log("Updated: ");
+                res.redirect('/');
+            });
+        } else {
+            db.User.create(data, (err, raw) => {
+                if (err) return err;
+                console.log("Created: ");
                 console.log(raw);
                 res.redirect('/');
             });
         }
     });
-}); 
+});
 
 app.listen(app.get('port'), function () {
     console.log('App runing -> http://localhost:' + app.get('port'));

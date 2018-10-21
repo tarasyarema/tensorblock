@@ -322,12 +322,13 @@ function start_game(level){
 
     // Creating render function.
     let render = function () {
+        $('#time').html("<b>Timeline(" + String(-REGISTERED_MOVEMENTS.length) + ')</b>');
         requestAnimationFrame(render);
         update_cube(Cube, level, scene, CUBE_COLOR);
         update_blockchain();
         update_tensorflow();
         update_p_adics();
-        renderer.render(scene, camera);
+        renderer.render(scene, camera)
     };
 
     render();
