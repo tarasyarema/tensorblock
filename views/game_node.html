@@ -41,6 +41,9 @@
 <body>
 <ul class="nav justify-content-center">
     <li class="nav-item">
+        <a id="stage" class="nav-link disabled" style="color: darkviolet"></a>
+    </li>
+    <li class="nav-item">
         <a class="nav-link active" href="/">Ranking</a>
     </li>
     <li class="nav-item">
@@ -48,6 +51,9 @@
     </li>
     <li class="nav-item">
         <a class="nav-link" href="/register">Register</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/game">Reset</a>
     </li>
 </ul>
             
@@ -59,6 +65,7 @@
 <script>
     const id = <%= lvl %>;
     const levels = [ level0, level1, level2, level3 ];
+    $('#stage').append('<b>Level ' + String(id) + '</b>');
     start_game(levels[id]);
 </script>
 
