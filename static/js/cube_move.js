@@ -120,7 +120,7 @@ function update_cube(Cube, level, scene){
 
         if (Cube.x-Cube.d/2 <= xmax && Cube.x + Cube.d/2 >= xmin) {
             if (Cube.y - Cube.d / 2 <= ymax + EPSILON && Cube.y +Cube.d/2 >= ymin) {
-                if (Cube.vy <= 0) {
+                if (Cube.vy <= 0 && Cube.y >= (ymax + ymin) / 2) {
                     is_on_platform = true;
                     Cube.y = ymax + Cube.d / 2;
                 } else {
@@ -158,7 +158,7 @@ function update_cube(Cube, level, scene){
 
         if (Cube.x - Cube.d / 2 <= xmax && Cube.x + Cube.d / 2 >= xmin) {
             if (Cube.y - Cube.d / 2 <= ymax + EPSILON && Cube.y + Cube.d / 2 >= ymin) {
-                if (Cube.vy <= 0) {
+                if (Cube.vy <= 0 && Cube.y >= (ymax + ymin) / 2) {
                     is_on_platform = true;
                     Cube.y = ymax + Cube.d / 2;
                 } else {
@@ -200,8 +200,6 @@ function update_cube(Cube, level, scene){
             if (Cube.x - Cube.d / 2 <= xmax && Cube.x + Cube.d / 2 >= xmin &&
                 Cube.y - Cube.d / 2 <= ymax && Cube.y + Cube.d / 2 >= ymin) {
                 if ((Date.now() - START_TIME) >= MIN_INTER_TRAVEL_TIME) {
-                    console.log("Registering RUN!");
-                    console.log({REGISTERED_MOVEMENTS, CURRENT_MOVEMENTS, EVENT_LISTENERS_ENABLED, GRABBABLE_OBJECTS, GRABBED_OBJECT});
                     register_run(Cube);
                 }
             }
@@ -310,4 +308,6 @@ function start_game(level){
     };
 
     render();
+
+    return Cube;
 }
