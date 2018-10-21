@@ -23,11 +23,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(logger('dev'));
 app.use(cookieParser());
 
-app.get('*', (req, res, next) => {
-    console.log('Cookies: ', req.cookies);
-    next();
-});
-
 app.get('/', (req, res) => {
     db.User.find({}, (err, doc) => {
         if (err) return err;
@@ -59,31 +54,35 @@ app.get('/game/:lvl', (req, res) => {
     res.redirect('/game');
 });
 
-app.get('/register', (req, res) => {
-    res.render('register');
-});
+app.route('/register')
+    .get('/register', (req, res) => {
+        res.render('register');
+        })
+        .post('/register', (req, res) => {
+        let data = {
+            username: req.body.username,
+            level0: req.cookies.Level0 == 'true' ? true : false,
+            level1: req.cookies.Level1 == 'true' ? true : false,
+            level2: req.cookies.Level2 == 'true' ? true : false,
+            level3: req.cookies.Level3 == 'true' ? true : false,
+            level4: req.cookies.Level4 == 'true' ? true : false,
+            level5: req.cookies.Level5 == 'true' ? true : false
+        }
 
-app.post('/register', (req, res) => {
-    let data = {
-        username: req.body.username,
-        level0: req.cookies.Level0 == 'true' ? true : false,
-        level1: req.cookies.Level1 == 'true' ? true : false,
-        level2: req.cookies.Level2 == 'true' ? true : false,
-        level3: req.cookies.Level3 == 'true' ? true : false,
-        level4: req.cookies.Level4 == 'true' ? true : false,
-        level5: req.cookies.Level5 == 'true' ? true : false
-    }
-    db.User.findOneAndUpdate({ username: req.body.username }, data, (err, acc) => {
-        if (err)
-            db.User.create(data, (err, user) => {
-                if (err) throw err;
-                else res.redirect('/');
-            });
-        else
-            res.redirect('/');
-    });
-});
+        console.log("Data:");
+        console.log(data);
 
-app.listen(3000, function () {
-	console.log('Listening on http://localhost:3000');
+        db.User.findOneAndUpdate({ username: req.body.username }, data, (err, acc) => {
+            if (err)
+                db.User.create(data, (err, user) => {
+                    if (err) throw err;
+                    else res.redirect('/');
+                });
+            else
+                res.redirect('/');
+        });
+    }); 
+
+app.listen(app.get('port'), function () {
+    console.log('App runing -> http://localhost:' + app.get('port'));
 });
