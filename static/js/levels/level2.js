@@ -11,6 +11,7 @@ const level2 = {
 
 
 let REPLAYED_2 = false;
+let win = false;
 
 
 function replaystep_2(Cube) {
@@ -89,7 +90,7 @@ function step4_2(Cube) {
 
 function step3_2(Cube) {
     if (Cube.x >= -8) {
-        setTimeout(step3_2, 20, Cube)
+        setTimeout(step3_2, 20, Cube);
     }
     else {
         arrow_up(Cube);
@@ -98,19 +99,36 @@ function step3_2(Cube) {
     }
 }
 
+function delay(Cube){
+    key_down_left(Cube);
+    step3_2(Cube);
+}
+
 function step2_2_1(Cube) {
-    if (Cube.vy >= -0.64) {
-        setTimeout(step2_2, 20, Cube)
+    if (!REPLAYED_2) {
+        if (Cube.vy >= -0.86) {
+            setTimeout(step2_2_1, 20, Cube);
+        }
+        else {
+            key_down_up(Cube);
+            key_down_left(Cube);
+            step3_2(Cube);
+        }
     }
     else {
-        key_down_up(Cube);
-        key_down_left(Cube);
-        step3_2(Cube);
+        if (!Cube.on_platform){
+            setTimeout(step2_2_1, 20, Cube);
+        }
+        else{
+            key_down_up(Cube);
+            setTimeout(delay, 200, Cube);
+        }
+
     }
 }
 
 function step2_2(Cube) {
-    if (Cube.vy >= 0.08) {
+    if (Cube.vy >= 0.4) {
         setTimeout(step2_2, 20, Cube)
     }
     else {
@@ -121,7 +139,7 @@ function step2_2(Cube) {
 
 
 function step1_2(Cube) {
-    if (Cube.x <= 1.3) {
+    if (Cube.x <= 1.5) {
         setTimeout(step1_2, 20, Cube)
     }
     else {
@@ -134,8 +152,8 @@ function step1_2(Cube) {
 
 
 function solution2() {
-    // EVENT_LISTENERS_ENABLED = false;
-    // ENABLE_LOSER = false;
+    EVENT_LISTENERS_ENABLED = false;
+    ENABLE_LOSER = false;
     let Cube = start_game(level2);
 
     key_down_right(Cube);
