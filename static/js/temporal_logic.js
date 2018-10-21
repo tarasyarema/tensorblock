@@ -28,6 +28,7 @@ function register_run(Cube) {
 
 function enable_event_listener(Cube) {
     EVENT_LISTENERS_ENABLED = true;
+    TIME_TRAVEL_ENABLED = true;
 
     CURRENT_MOVEMENTS = [[Cube.x, Cube.y, Cube.vx, Cube.vy]];
     START_TIME = Date.now();
@@ -35,6 +36,8 @@ function enable_event_listener(Cube) {
 
 function run_future(Cube, scene, level) {
     EVENT_LISTENERS_ENABLED = false;
+    TIME_TRAVEL_ENABLED = false;
+    START_TIME = Date.now();
     //If there are NO registered movements then you are a noob and you have lost.
     if (REGISTERED_MOVEMENTS.length === 0 && LOSS === false && ENABLE_LOSER) {
         LOSS = true;

@@ -14,6 +14,7 @@ var CURRENT_MOVEMENTS = [];
 var START_TIME;
 var MIN_INTER_TRAVEL_TIME = 2000;
 var EVENT_LISTENERS_ENABLED = true;
+var TIME_TRAVEL_ENABLED = true;
 var GRABBABLE_OBJECTS = [];
 var NON_GRABBABLE_OBJECTS = [];
 var GRABBED_OBJECT = null;
@@ -221,7 +222,7 @@ function update_cube(Cube, level, scene){
 
             if (Cube.x - Cube.d / 2 <= xmax && Cube.x + Cube.d / 2 >= xmin &&
                 Cube.y - Cube.d / 2 <= ymax && Cube.y + Cube.d / 2 >= ymin) {
-                if ((Date.now() - START_TIME) >= MIN_INTER_TRAVEL_TIME) {
+                if ((Date.now() - START_TIME) >= MIN_INTER_TRAVEL_TIME && TIME_TRAVEL_ENABLED) {
                     register_run(Cube);
                 }
             }
