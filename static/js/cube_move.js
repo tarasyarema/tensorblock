@@ -236,7 +236,8 @@ function update_cube(Cube, level, scene){
             WIN = true;
             TIME = START_TIME - Date.now();
             printCombo(mean_x(level), mean_y(level), 5, 'WINNER', scene, 0x31ffe1);
-            $('.levels').css('display','block');
+            Cookies.remove('Level' + level.id);
+            Cookies.set('Level' + level.id, 'true');
         }
     }
 

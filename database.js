@@ -10,8 +10,23 @@ var user = new mongoose.Schema({
         required: true,
         unique: true
     },
-    levels: {
-        type: Array
+    level0: {
+        type: Boolean
+    },
+    level1: {
+        type: Boolean
+    },
+    level2: {
+        type: Boolean
+    },
+    level3: {
+        type: Boolean
+    },
+    level4: {
+        type: Boolean
+    },
+    level5: {
+        type: Boolean
     }
 });
 

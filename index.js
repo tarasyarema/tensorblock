@@ -32,6 +32,7 @@ app.get('/', (req, res) => {
     db.User.find({}, (err, doc) => {
         if (err) return err;
         else {
+            console.log(doc);
             res.render('index', {
                 ranking: doc
             });
@@ -65,19 +66,21 @@ app.get('/register', (req, res) => {
 app.post('/register', (req, res) => {
     let data = {
         username: req.body.username,
-        level: [
-            req.cookies.level0,
-            req.cookies.level1,
-            req.cookies.level2,
-            req.cookies.level3 ]
+        level0: req.cookies.Level0 == 'true' ? true : false,
+        level1: req.cookies.Level1 == 'true' ? true : false,
+        level2: req.cookies.Level2 == 'true' ? true : false,
+        level3: req.cookies.Level3 == 'true' ? true : false,
+        level4: req.cookies.Level4 == 'true' ? true : false,
+        level5: req.cookies.Level5 == 'true' ? true : false
     }
-
-	db.User.create(data, (err, user) => {
-		if (err) throw err;
-		else {
-            console.log(user._id);
-			res.redirect('/game');
-        }
+    db.User.findOneAndUpdate({ username: req.body.username }, data, (err, acc) => {
+        if (err)
+            db.User.create(data, (err, user) => {
+                if (err) throw err;
+                else res.redirect('/');
+            });
+        else
+            res.redirect('/');
     });
 });
 

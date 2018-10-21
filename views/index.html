@@ -7,41 +7,64 @@
 </head>
 
 <body>
+<ul class="nav justify-content-center">
+	<li class="nav-item">
+		<a class="nav-link active" href="/game">Play!</a>
+	</li>
+</ul>
 
-		<div style="background:transparent !important" class="jumbotron vertical-center">
+<div style="background:transparent !important" class="jumbotron vertical-center">
 	<div class="container-fluid">
-		<h1>epic game name</h1>
-		<p>Flipalo colaga :3</p>
+		<h1 style="text-align: center">TENSORBLOCK.js</h1>
+		<p style="text-align: justify">
+			Imagine Mario eating mushrooms. 
+			Now the past is the present and the present is the past.
+			TENSORBLOCK.js is a <b>Blockchain</b> and <b>Tensorflow</b> based 2D game 
+			that consist in visiting your past to alter the present.
+			Sometimes it can get recursive, take care! 
+		</p>
 	</div>
 	<div class="container-fluid">
+		<h2 style="text-align: center">THE BIBLE.js</h2>
 		<div class="container" style="margin: auto;">
 			<table class="table table-hover">
 				<thead class="thead-dark">
 					<tr>
 						<th>USER</th>
-						<th>LVL0</th>
-						<th>LVL1</th>
-						<th>LVL2</th>
-						<th>LVL3</th>
+						<th>LVL 0</th>
+						<th>LVL 1</th>
+						<th>LVL 2</th>
+						<th>LVL 3</th>
 					</tr>
 				</thead>
 				<tbody>
 				<% for (var i = 0; i < ranking.length; ++i) { %>
 					<tr>
 						<th><%= ranking[i].username %></th>
-						<th><%= ranking[i].level %></th>
-						<th><%= ranking[i].level %></th>
-						<th><%= ranking[i].level %></th>
-						<th><%= ranking[i].level %></th>
+						<% if (ranking[i].level0) { %>
+							<th> ✓ </th>
+						<% } else { %>
+							<th> ✗ </th>
+						<% } %>
+						<% if (ranking[i].level1) { %>
+							<th> ✓ </th>
+						<% } else { %>
+							<th> ✗ </th>
+						<% } %>
+						<% if (ranking[i].level2) { %>
+							<th> ✓ </th>
+						<% } else { %>
+							<th> ✗ </th>
+						<% } %>
+						<% if (ranking[i].level3) { %>
+							<th> ✓ </th>
+						<% } else { %>
+							<th> ✗ </th>
+						<% } %>
 					</tr>
 				<% } %>
 				</tbody>
 			</table>
-		</div>
-	</div>
-	<div class="container-fluid">
-		<div class="row">
-			<a href='/game'>Go to the game!</a>
 		</div>
 	</div>
 </div>

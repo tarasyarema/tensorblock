@@ -21,7 +21,6 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/97/three.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/97/three.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/97/three.module.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
 <script type="text/javascript" src="js/letters.js"></script>
 <script type="text/javascript" src="js/levels/level0.js"></script>
 <script type="text/javascript" src="js/levels/level1.js"></script>
@@ -35,13 +34,24 @@
 <script type="text/javascript" src="js/animation/pingu.js"></script>
 <script type="text/javascript" src="js/animation/doors.js"></script>
 <script type="text/javascript" src="js/animation/clouds.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
 
 </head>
 
 <body>
-
+<ul class="nav justify-content-center">
+    <li class="nav-item">
+        <a class="nav-link active" href="/">Ranking</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/level">Levels</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/register">Register</a>
+    </li>
+</ul>
+            
 <div class="container">
-    <a href="/level" class="levels" style="display: none">back to levels</a>
     <canvas id="game"></canvas>
     <% var lvl = level;%>
 </div>
@@ -49,7 +59,6 @@
 <script>
     const id = <%= lvl %>;
     const levels = [ level0, level1, level2, level3 ];
-    Cookies.set('Level' + id, 'LOSE');
     start_game(levels[id]);
 </script>
 

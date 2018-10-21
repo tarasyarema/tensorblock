@@ -7,17 +7,28 @@
 </head>
 
 <body>
-
-<div class="main">
-    <div class="container">
-        <h1>Register!</h1>
-        <form method="POST" action="">
-            <input type="text" name="username" placeholder="user">
-            <input type="submit" value="go!">
-        </form> 
+<ul class="nav justify-content-center">
+    <li class="nav-item">
+        <a class="nav-link active" href="/">Ranking</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/level">Levels</a>
+    </li>
+</ul>
+<div style="background:transparent !important" class="jumbotron vertical-center">
+    <div class="row" style="text-align: center;">
+        <div class="container">
+            <h2>Register your progress!</h2>
+            <p>If the user exists it will be updated, if not it will be created.</p>
+        </div>
+        <div class="container">
+            <form method="POST" action="">
+                <input type="text" name="username" placeholder="user">
+                <input type="submit" value="go!">
+            </form>
+        </div>
     </div>
 </div>
-
 </body>
 
 </html>
