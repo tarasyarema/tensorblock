@@ -73,6 +73,10 @@ app.post('/register', (req, res) => {
         level4: req.cookies.Level4 == 'true' ? true : false,
         level5: req.cookies.Level5 == 'true' ? true : false
     }
+
+    console.log("Data:");
+    console.log(data);
+
     db.User.findOneAndUpdate({ username: req.body.username }, data, (err, acc) => {
         if (err)
             db.User.create(data, (err, user) => {
@@ -84,6 +88,6 @@ app.post('/register', (req, res) => {
     });
 });
 
-app.listen(3000, function () {
-	console.log('Listening on http://localhost:3000');
+app.listen(app.get('port'), function () {
+    console.log('App runing -> http://localhost:' + app.get('port'));
 });
