@@ -26,8 +26,11 @@ function register_run(Cube) {
     GRABBED_OBJECT = null;
 }
 
-function enable_event_listener() {
+function enable_event_listener(Cube) {
     EVENT_LISTENERS_ENABLED = true;
+
+    CURRENT_MOVEMENTS = [[Cube.x, Cube.y, Cube.vx, Cube.vy]];
+    START_TIME = Date.now();
 }
 
 function run_future(Cube, scene, level) {
@@ -58,5 +61,5 @@ function run_future(Cube, scene, level) {
         setTimeout(func, time_delta, Cube);
     }
 
-    setTimeout(enable_event_listener, time_delta)
+    setTimeout(enable_event_listener, time_delta, Cube)
 }

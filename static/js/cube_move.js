@@ -221,7 +221,7 @@ function update_cube(Cube, level, scene){
 
             if (Cube.x - Cube.d / 2 <= xmax && Cube.x + Cube.d / 2 >= xmin &&
                 Cube.y - Cube.d / 2 <= ymax && Cube.y + Cube.d / 2 >= ymin) {
-                if ((Date.now() - START_TIME) >= MIN_INTER_TRAVEL_TIME && Date.now() >= MIN_INTER_TRAVEL_TIME) {
+                if ((Date.now() - START_TIME) >= MIN_INTER_TRAVEL_TIME) {
                     register_run(Cube);
                 }
             }
