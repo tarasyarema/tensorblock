@@ -149,6 +149,28 @@ function update_cube(Cube, level, scene){
         }
     }
 
+    let ver_platforms = level.ver_bar;
+    if (ver_platforms !== null) {
+        for (let i = 0; i < ver_platforms.length; ++i) {
+            let platform = platforms[i];
+            let xmin = platform[0] - PLATFORM_Y / 2;
+            let xmax = platform[0] + PLATFORM_Y / 2;
+            let ymin = platform[1] - platform[2] / 2;
+            let ymax = platform[1] + platform[2] / 2;
+
+            if (Cube.x - Cube.d / 2 <= xmax && Cube.x + Cube.d / 2 >= xmin &&
+                Cube.y - Cube.d / 2 <= ymax && Cube.y + Cube.d / 2 >= ymin) {
+                if (Cube.x >= (xmin + xmax) / 2) {
+                    Cube.x = xmax + Cube.d / 2
+                }
+                else {
+                    Cube.x = xmin - Cube.d / 2
+                }
+                Cube.vx = 0;
+            }
+        }
+    }
+
     for (let i = 0; i < NON_GRABBABLE_OBJECTS.length; ++i) {
         let bar = NON_GRABBABLE_OBJECTS[i];
         let xmin = bar.position.x - bar.geometry.parameters.width / 2;

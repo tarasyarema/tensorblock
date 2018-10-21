@@ -1,4 +1,5 @@
 var LOSS = false;
+var ENABLE_LOSER = true;
 
 function register_event(func) {
     let delta_t = Date.now() - START_TIME;
@@ -32,7 +33,7 @@ function enable_event_listener() {
 function run_future(Cube, scene, level) {
     EVENT_LISTENERS_ENABLED = false;
     //If there are NO registered movements then you are a noob and you have lost.
-    if (REGISTERED_MOVEMENTS.length === 0 && LOSS === false) {
+    if (REGISTERED_MOVEMENTS.length === 0 && LOSS === false && ENABLE_LOSER) {
         LOSS = true;
         printCombo(mean_x(level), mean_y(level), 5, 'LOSER', scene, 0xffe131);
         return 0;
