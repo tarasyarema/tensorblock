@@ -186,7 +186,7 @@ function setup_level(level) {
     let update_erdos = dinamicPrintCombo(-117, 15, -150, "Erdos", scene, 0x20ff9a);
     let update_gauss = dinamicPrintCombo(14, -123, -150, "Gauss", scene, 0xff85dc);
     let update_euler = dinamicPrintCombo(-7, 53, -150, "Euler", scene, 0x9eff00);
-    let update_wolfram = dinamicPrintCombo(-7, 53, -150, "Wolfram", scene, 0xff9100);
+    let update_wolfram = dinamicPrintCombo(-53, 72, -150, "Wolfram", scene, 0xff9100);
 
     /*
     Draw portals.
