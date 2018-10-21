@@ -35,6 +35,8 @@
 						<th>LVL 1</th>
 						<th>LVL 2</th>
 						<th>LVL 3</th>
+						<th>LVL 4</th>
+						<th>LVL 5</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -57,6 +59,16 @@
 							<th> ✗ </th>
 						<% } %>
 						<% if (ranking[i].level3) { %>
+							<th> ✓ </th>
+						<% } else { %>
+							<th> ✗ </th>
+						<% } %>
+						<% if (ranking[i].level4) { %>
+							<th> ✓ </th>
+						<% } else { %>
+							<th> ✗ </th>
+						<% } %>
+						<% if (ranking[i].level5) { %>
 							<th> ✓ </th>
 						<% } else { %>
 							<th> ✗ </th>
