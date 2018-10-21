@@ -44,11 +44,8 @@ function key_down_up(Cube) {
  * react to key pressed.
  */
 function key_down_listener(event, Cube) {
-    let key;
-    pingu_index = 0;
-    
     // get key pressed.
-    key = event.key;
+    let key = event.key;
 
     // if left arrow key is pressed then , depending on 'ChangeYearOnKeyPress'
     // variable value we show previous page of bookmarks or of backgrounds
