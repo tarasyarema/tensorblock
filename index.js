@@ -1,6 +1,6 @@
 // import tensorflow										;
 // import blockchain										;
-
+const db = require('./database.js');
 var express = require('express');
 var path = require('path');
 var bodyParser = require('body-parser');
@@ -9,7 +9,6 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 
 var app = express();
-const db = require('./database.js');
 
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
@@ -72,20 +71,31 @@ app.post('/register', (req, res) => {
     console.log("Data: ");
     console.log(data);
 
-    console.log("Req.Cookies: ");
-    console.log(req.cookies);
-
-    console.log("Body.Username: ");
-    console.log(req.body.username);
-
-    db.User.findOneAndUpdate({ username: req.body.username }, data, (err, acc) => {
-        if (err)
+    db.User.findOne({ username: req.body.username }, (err, doc) => {
+        if (err) {
             db.User.create(data, (err, user) => {
                 if (err) throw err;
-                else res.redirect('/');
+                else {
+                    console.log("Created user.");
+                    res.redirect('/');
+                }
             });
-        else
-            res.redirect('/');
+        } else {
+            doc.level0 = data.level0;
+            doc.level1 = data.level1;
+            doc.level2 = data.level2;
+            doc.level3 = data.level3;
+            doc.level4 = data.level4;
+            doc.level5 = data.level5;
+
+            doc.save((err, raw) => {
+                if (err) return err;
+
+                console.log("Updated user: ");
+                console.log(raw);
+                res.redirect('/');
+            });
+        }
     });
 }); 
 
