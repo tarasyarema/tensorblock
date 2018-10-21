@@ -9,102 +9,102 @@ const level1 = {
     "id": 1
 };
 
-var REPLAYED = false;
+let REPLAYED_1 = false;
 
 
-function replaystep(Cube) {
-    REPLAYED=true;
+function replaystep_1(Cube) {
+    REPLAYED_1=true;
     Cube.mat.position.set(level1.init[0], level1.init[1] + CUBE_EDGE/2+PLATFORM_Y/2, 0);
     Cube.x = level1.init[0];
     Cube.y = level1.init[1] + CUBE_EDGE/2+PLATFORM_Y/2;
     key_down_left(Cube);
-    step1(Cube);
+    step1_1(Cube);
 }
 
-function step7(Cube) {
+function step7_1(Cube) {
     if (Cube.x >= 8) {
-        setTimeout(step7, 20, Cube)
+        setTimeout(step7_1, 20, Cube)
     }
     else {
         arrow_up(Cube);
-        setTimeout(replaystep, 1500, Cube)
+        setTimeout(replaystep_1, 1500, Cube)
     }
 }
 
 
-function step6(Cube) {
+function step6_1(Cube) {
     if (Cube.vy >= 0) {
-        setTimeout(step6, 20, Cube)
+        setTimeout(step6_1, 20, Cube)
     }
     else {
         key_down_space(Cube);
         key_down_left(Cube);
-        step7(Cube)
+        step7_1(Cube)
     }
 }
 
 
-function step5(Cube) {
+function step5_1(Cube) {
     if (Cube.x >= 15) {
-        setTimeout(step5, 20, Cube)
+        setTimeout(step5_1, 20, Cube)
     }
     else {
         arrow_up(Cube);
         key_down_space(Cube);
         key_down_up(Cube);
-        step6(Cube)
+        step6_1(Cube)
     }
 }
 
 
-function step4(Cube) {
+function step4_1(Cube) {
     if (Cube.x <= 21) {
-        setTimeout(step4, 20, Cube)
+        setTimeout(step4_1, 20, Cube)
     }
     else {
         arrow_up(Cube);
-        if (REPLAYED) {
+        if (REPLAYED_1) {
             EVENT_LISTENERS_ENABLED = true;
             ENABLE_LOSER = true;
         }
         else {
             key_down_left(Cube);
-            step5(Cube)
+            step5_1(Cube)
         }
     }
 }
 
 
-function step3(Cube) {
+function step3_1(Cube) {
     if (Cube.x <= 15) {
-        setTimeout(step3, 20, Cube)
+        setTimeout(step3_1, 20, Cube)
     }
     else {
         key_down_up(Cube);
-        step4(Cube)
+        step4_1(Cube)
     }
 }
 
 
-function step2(Cube) {
+function step2_1(Cube) {
     if (Cube.x <= 2) {
-        setTimeout(step2, 20, Cube)
+        setTimeout(step2_1, 20, Cube)
     }
     else {
         key_down_up(Cube);
-        step3(Cube)
+        step3_1(Cube)
     }
 }
 
 
-function step1(Cube) {
+function step1_1(Cube) {
 	if (Cube.x >= -7) {
-		setTimeout(step1, 20, Cube)
+		setTimeout(step1_1, 20, Cube)
 	}
 	else {
         arrow_up(Cube);
         key_down_right(Cube);
-		step2(Cube)
+		step2_1(Cube)
 	}
 }
 
@@ -115,5 +115,5 @@ function solution1() {
     let Cube = start_game(level1);
 
     key_down_left(Cube);
-    step1(Cube);
+    step1_1(Cube);
 }
