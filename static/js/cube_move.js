@@ -268,7 +268,6 @@ function update_cube(Cube, level, scene){
         if (REGISTERED_MOVEMENTS.length === 0 && WIN === false && LOSS ===false) {
             if (USED_PAST || level.id === 0) {
                 WIN = true;
-                TIME = START_TIME;
                 printCombo(mean_x(level), mean_y(level), 5, 'WINNER', scene, 0x31ffe1);
                 let next_level;
                 if (level.id < LEVELS.length - 1){
