@@ -1,3 +1,5 @@
+var USED_PAST = false;
+
 function key_down_space(Cube) {
     if (GRABBED_OBJECT !== null) {
         GRABBED_OBJECT.position.x = Cube.x;
@@ -20,6 +22,9 @@ function key_down_space(Cube) {
                 Cube.y - Cube.d / 2 <= ymax && Cube.y + Cube.d / 2 >= ymin) {
                 GRABBED_OBJECT = GRABBABLE_OBJECTS[i];
                 GRABBABLE_OBJECTS.splice(i, 1);
+                if (REGISTERED_MOVEMENTS.length > 0) {
+                    USED_PAST = true;
+                }
                 break;
             }
         }

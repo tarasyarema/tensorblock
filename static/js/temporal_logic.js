@@ -49,6 +49,7 @@ function run_future(Cube, scene, level) {
     if (REGISTERED_MOVEMENTS.length === 0 && LOSS === false && ENABLE_LOSER) {
         LOSS = true;
         printCombo(mean_x(level), mean_y(level), 5, 'LOSER', scene, 0xffe131);
+        setTimeout(destroy_scene_and_start_game, 2000, level);
         return 0;
     }
 

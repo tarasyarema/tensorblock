@@ -1,5 +1,4 @@
 const CUBE_EDGE = 2;
-const EPSILON = 0.7;
 //const HORIZONTAL_ACC = 0.2;
 const SPEED = 0.4;
 const VERTICAL_SPEED = 1.2;
@@ -7,6 +6,7 @@ const MIN_VERTICAL_SPEED = -0.8;
 const GRAVITY = -0.08;
 const CUBE_COLOR = 0xff710d;
 const MIN_HEIGHT = -100;
+const LEVELS = [level0, level1, level2, level3, level4, level5];
 
 var WIN = false;
 var TIME;
@@ -37,6 +37,11 @@ function key_down_right(Cube){
 
 function key_down_up(Cube) {
     up_down = true;
+}
+
+function destroy_scene_and_start_game(level) {
+    location.reload();
+    start_game(level)
 }
 
 /**
@@ -260,12 +265,28 @@ function update_cube(Cube, level, scene){
 
     if (Cube.x-Cube.d/2 < xmax && Cube.x + Cube.d/2 > xmin &&
         Cube.y-Cube.d/2 < ymax && Cube.y + Cube.d/2 > ymin) {
-        if (REGISTERED_MOVEMENTS.length === 0 && WIN === false) {
-            WIN = true;
-            TIME = START_TIME;
-            printCombo(mean_x(level), mean_y(level), 5, 'WINNER', scene, 0x31ffe1);
-            Cookies.remove('Level' + level.id);
-            Cookies.set('Level' + level.id, 'true');
+        if (REGISTERED_MOVEMENTS.length === 0 && WIN === false && LOSS ===false) {
+            if (USED_PAST || level.id === 0) {
+                WIN = true;
+                TIME = START_TIME;
+                printCombo(mean_x(level), mean_y(level), 5, 'WINNER', scene, 0x31ffe1);
+                let next_level;
+                if (level.id < LEVELS.length - 1){
+                    next_level = LEVELS[level.id + 1];
+                }
+                else {
+                    next_level = level;
+                }
+                setTimeout(start_game, 2000, next_level);
+
+                Cookies.remove('Level' + level.id);
+                Cookies.set('Level' + level.id, 'true');
+            }
+            else {
+                LOSS = true;
+                printCombo(mean_x(level), mean_y(level), 5, 'CHEATING BASTARD', scene, 0xff0000);
+                setTimeout(destroy_scene_and_start_game, 2000, level);
+            }
         }
     }
     
