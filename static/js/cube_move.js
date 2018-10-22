@@ -39,6 +39,11 @@ function key_down_up(Cube) {
     up_down = true;
 }
 
+function destroy_scene_and_start_game(level) {
+    location.reload();
+    start_game(level)
+}
+
 /**
  * react to key pressed.
  */
@@ -275,8 +280,7 @@ function update_cube(Cube, level, scene){
             else {
                 LOSS = true;
                 printCombo(mean_x(level), mean_y(level), 5, 'CHEATING BASTARD', scene, 0xff0000);
-                // todo define this function.
-                // setTimeout(destroy_scene_amd_start_game, 2000, level);
+                setTimeout(destroy_scene_and_start_game, 2000, level);
             }
         }
     }
