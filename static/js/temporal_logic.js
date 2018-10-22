@@ -34,9 +34,9 @@ function enable_event_listener(Cube) {
     CURRENT_TIME = 0;
 }
 
-let last_movements = null;
-let next_last_movement;
-let current_future_frame;
+var last_movements = null;
+var next_last_movement;
+var current_future_frame;
 function run_future(Cube, scene, level) {
     EVENT_LISTENERS_ENABLED = false;
     TIME_TRAVEL_ENABLED = false;
@@ -54,6 +54,7 @@ function run_future(Cube, scene, level) {
 
     // Get last registered movement. 
     last_movements = REGISTERED_MOVEMENTS.pop();
+    console.log(last_movements.length);
 
     // Get initial position.
     let pos = last_movements[0];
@@ -62,21 +63,26 @@ function run_future(Cube, scene, level) {
     Cube.y = pos[1];
     Cube.vx = pos[2];
     Cube.vy = pos[3];
+    key_down_left = false;
+    key_down_right = false;
+    key_down_up = false;
     
     next_last_movement = 1;
     current_future_frame = 0;
+    return 1;
 }
 
 function run_future_frame(Cube){
-    let i = next_last_movement;
-    let time_delta = last_movements[i][0];
-    if(time_delta == CURRENT_TIME){
-        last_movements[i][1]();
-        i++;
-        if(i == last_movements.length){
-            enable_event_listener();
+    let time_delta = last_movements[next_last_movement][0];
+    while(time_delta == CURRENT_TIME){
+        last_movements[next_last_movement][1]();
+        next_last_movement++;
+        if(next_last_movement == last_movements.length){
+            enable_event_listener(Cube);
             return false;
         }
+        
+        time_delta = last_movements[next_last_movement][0];
     }
     return true;
 }

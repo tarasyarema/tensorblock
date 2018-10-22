@@ -12,7 +12,8 @@ var TIME;
 var REGISTERED_MOVEMENTS = [];
 var CURRENT_MOVEMENTS = [];
 var CURRENT_TIME;
-var MIN_INTER_TRAVEL_TIME = 2000;
+var MIN_INTER_TRAVEL_TIME = 2000/60;
+var LAST_TRAVEL_TIME = -MIN_INTER_TRAVEL_TIME;
 var EVENT_LISTENERS_ENABLED = true;
 var TIME_TRAVEL_ENABLED = true;
 var GRABBABLE_OBJECTS = [];
@@ -168,11 +169,11 @@ function cube_can_move(level, Cube, v, eps){ // Says if Cube can move v from its
 let running_future = false;
 function update_cube(Cube, level, scene){
     if (Cube.y <= MIN_HEIGHT && (!LOSS && !WIN)) {
-        run_future(Cube, scene, level);
-        running_future = true;
+        if(run_future(Cube, scene, level))
+            running_future = true;
     }
     if(running_future){
-        running_Future = run_future_frame(Cube);
+        running_future = run_future_frame(Cube);
     }
 
     let is_on_platform = false;
@@ -213,8 +214,9 @@ function update_cube(Cube, level, scene){
 
             if (Cube.x - Cube.d / 2 <= xmax && Cube.x + Cube.d / 2 >= xmin &&
                 Cube.y - Cube.d / 2 <= ymax && Cube.y + Cube.d / 2 >= ymin) {
-                if (CURRENT_TIME >= MIN_INTER_TRAVEL_TIME && TIME_TRAVEL_ENABLED) {
+                if (CURRENT_TIME >= LAST_TRAVEL_TIME+MIN_INTER_TRAVEL_TIME && TIME_TRAVEL_ENABLED) {
                     register_run(Cube);
+                    LAST_TRAVEL_TIME = CURRENT_TIME;
                 }
             }
         }
