@@ -26,7 +26,7 @@ function key_down_left(Cube){
     left_down = true;
 }
 
-function key_down_right(Cube){}
+function key_down_right(Cube){
     right_down = true;
 }
 
