@@ -3,6 +3,7 @@ const EPSILON = 0.7;
 //const HORIZONTAL_ACC = 0.2;
 const SPEED = 0.4;
 const VERTICAL_SPEED = 1.2;
+const MIN_VERTICAL_SPEED = -0.8;
 const GRAVITY = -0.08;
 const CUBE_COLOR = 0xff710d;
 const MIN_HEIGHT = -100;
@@ -19,6 +20,9 @@ var TIME_TRAVEL_ENABLED = true;
 var GRABBABLE_OBJECTS = [];
 var NON_GRABBABLE_OBJECTS = [];
 var GRABBED_OBJECT = null;
+
+var disabled_portals = [];
+var updated_portals = false;
 
 var left_down = false;
 var right_down = false;
@@ -205,6 +209,9 @@ function update_cube(Cube, level, scene){
     let portals = level.portals;
     if (portals !== null){
         for (let i=0; i< portals.length; i++){
+            var disabled = disabled_portals.indexOf(i) !== -1;
+            if(disabled) continue;
+            
             let portal = portals[i];
             let xmin = portal[0] - PORTAL_X / 2;
             let xmax = portal[0] + PORTAL_X / 2;
@@ -217,6 +224,8 @@ function update_cube(Cube, level, scene){
                 if (CURRENT_TIME >= LAST_TRAVEL_TIME+MIN_INTER_TRAVEL_TIME && TIME_TRAVEL_ENABLED) {
                     register_run(Cube);
                     LAST_TRAVEL_TIME = CURRENT_TIME;
+                    disabled_portals.push(i);
+                    updated_portals = true;
                 }
             }
         }
@@ -230,7 +239,7 @@ function update_cube(Cube, level, scene){
     else {
         Cube.vy += GRAVITY;
         Cube.vy = Math.min(Cube.vy, VERTICAL_SPEED);
-        Cube.vy = Math.max(Cube.vy, -VERTICAL_SPEED);
+        Cube.vy = Math.max(Cube.vy, MIN_VERTICAL_SPEED);
     }
 
     Cube.mat.position.set(Cube.x, Cube.y, Cube.z);
@@ -275,6 +284,7 @@ function start_game(level){
     let update_gauss = aux.update_gauss;
     let update_erdos = aux.update_erdos;
     let update_wolfram = aux.update_wolfram;
+    let update_portals = aux.update_portals;
 
     // Initilize grabbable objects.
     for (let i = 0; i < BARS.length; i++) {
@@ -306,6 +316,8 @@ function start_game(level){
 
     CURRENT_TIME = 0;
     CURRENT_MOVEMENTS.push([Cube.x, Cube.y, Cube.vx, Cube.vy]);
+    
+    disabled_portals = [];
 
     //Add event listeners for cube moving.
     document.addEventListener('keydown', function (event){
@@ -324,7 +336,7 @@ function start_game(level){
 
     // Creating render function.
     let render = function () {
-        $('#time').html("<b>Timeline(" + String(-REGISTERED_MOVEMENTS.length) + ')</b>');
+        $('#time').html("<b>Timeline(" + String(-REGISTERED_MOVEMENTS.length) + ')</b>'); // This must be *very* laggy
         requestAnimationFrame(render);
         update_cube(Cube, level, scene, CUBE_COLOR);
         update_blockchain();
@@ -337,6 +349,10 @@ function start_game(level){
         update_gauss();
         update_erdos();
         update_wolfram();
+        if(updated_portals){
+            update_portals();
+            updated_portals = false;
+        }
         renderer.render(scene, camera);
     };
 
