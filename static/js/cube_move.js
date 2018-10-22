@@ -11,7 +11,7 @@ var WIN = false;
 var TIME;
 var REGISTERED_MOVEMENTS = [];
 var CURRENT_MOVEMENTS = [];
-var START_TIME;
+var CURRENT_TIME;
 var MIN_INTER_TRAVEL_TIME = 2000;
 var EVENT_LISTENERS_ENABLED = true;
 var TIME_TRAVEL_ENABLED = true;
@@ -19,25 +19,19 @@ var GRABBABLE_OBJECTS = [];
 var NON_GRABBABLE_OBJECTS = [];
 var GRABBED_OBJECT = null;
 
-
+var left_down = false;
+var right_down = false;
+var up_down = false;
 function key_down_left(Cube){
-    //if (Cube.on_platform) {
-        Cube.vx = -SPEED;
-        //Cube.vx = Math.max(Cube.vx, -SPEED);
-    //}
+    left_down = true;
 }
 
-function key_down_right(Cube){
-    //if (Cube.on_platform) {
-        Cube.vx = SPEED;
-        //Cube.vx = Math.min(Cube.vx, SPEED);
-    //}
+function key_down_right(Cube){}
+    right_down = true;
 }
 
 function key_down_up(Cube) {
-    if (Cube.on_platform) {
-        Cube.vy = VERTICAL_SPEED;
-    }
+    up_down = true;
 }
 
 /**
@@ -77,38 +71,46 @@ function key_down_listener(event, Cube) {
 }
 
 
-function arrow_up(Cube) {
-    //if (Cube.on_platform) {
-        Cube.vx = 0;
-    //}
+function key_up_left(Cube) {
+    left_down = false;
+}
+function key_up_right(Cube) {
+    right_down = false;
+}
+function key_up_up(Cube) {
+    up_down = false;
 }
 
 /**
  * react to key pressed.
  */
 function key_up_listener(event, Cube) {
-    let key;
-    // get key pressed.
-    key = event.key;
+    let key = event.key;
     // if left arrow key is pressed then , depending on 'ChangeYearOnKeyPress'
     // variable value we show previous page of bookmarks or of backgrounds
-    if ((key === "ArrowLeft" || key === "ArrowRight")  && EVENT_LISTENERS_ENABLED) {
-        register_event(arrow_up);
-        arrow_up(Cube)
+    if (key === "ArrowLeft"  && EVENT_LISTENERS_ENABLED) {
+        register_event(key_up_left);
+        key_up_left(Cube)
+    }
+    if (key === "ArrowRight"  && EVENT_LISTENERS_ENABLED) {
+        register_event(key_up_right);
+        key_up_right(Cube)
+    }
+    if (key === "ArrowUp"  && EVENT_LISTENERS_ENABLED) {
+        register_event(key_up_up);
+        key_up_up(Cube)
     }
 }
 
-function update_cube(Cube, level, scene){
+function cube_can_move(level, Cube, v, eps){ // Says if Cube can move v from its current position
+    let x = Cube.x + v[0];
+    let y = Cube.y + v[1];
+    let x0 = x - Cube.d/2 + eps[0];
+    let x1 = x + Cube.d/2 - eps[0];
+    let y0 = y - Cube.d/2 + eps[1];
+    let y1 = y + Cube.d/2 - eps[1];
+    
     let platforms = level.platforms;
-    Cube.x += Cube.vx;
-    Cube.y += Cube.vy;
-
-    if (Cube.y <= MIN_HEIGHT && (!LOSS && !WIN)) {
-        run_future(Cube, scene, level);
-    }
-
-    let is_on_platform = false;
-
     for (let i = 0; i < platforms.length; ++i) {
         let platform = platforms[i];
         let xmin = platform[0] - platform[2]/2;
@@ -116,37 +118,15 @@ function update_cube(Cube, level, scene){
         let ymax = platform[1] + PLATFORM_Y/2;
         let ymin = platform[1] - PLATFORM_Y/2;
 
-        if (Cube.x-Cube.d/2 <= xmax && Cube.x + Cube.d/2 >= xmin) {
-            if (Cube.y - Cube.d / 2 <= ymax + EPSILON && Cube.y +Cube.d/2 >= ymin) {
-                if (Cube.vy <= 0 && Cube.y >= (ymax + ymin) / 2) {
-                    is_on_platform = true;
-                    Cube.y = ymax + Cube.d / 2;
-                } else {
-                    if (is_on_platform === false) {
-                        Cube.y = ymin - Cube.d / 2;
-                        Cube.vy = 0;
-                    }
-                }
-            }
-            else if (Math.max(Cube.y - Cube.d/2, ymin) <= Math.min(Cube.y + Cube.d/2, ymax)) {
-                /**if (Cube.vx >= 0) {
-                    Cube.x = xmin - Cube.d / 2;
-                }
-                 else if (Cube.vx < 0) {
-                    Cube.x = xmax + Cube.d / 2;
-                }
-                 if (Cube.vy >= 0) {
-                    Cube.y = ymin - Cube.d / 2;
-                }
-                 else if (Cube.vy < 0) {
-                    Cube.y = ymax + Cube.d / 2;
-                }**/
-                Cube.vx = 0;
-                //Cube.vy = 0;
-            }
+        // Check if the cube and the platform would overlap
+        let overlap_x = x0 < xmax && x1 > xmin;
+        let overlap_y = y0 < ymax && y1 > ymin;
+        
+        if (overlap_x && overlap_y) {
+            return false;
         }
     }
-
+    
     let ver_platforms = level.ver_bar;
     if (ver_platforms !== null) {
         for (let i = 0; i < ver_platforms.length; ++i) {
@@ -156,15 +136,12 @@ function update_cube(Cube, level, scene){
             let ymin = platform[1] - platform[2] / 2;
             let ymax = platform[1] + platform[2] / 2;
 
-            if (Cube.x - Cube.d / 2 <= xmax && Cube.x + Cube.d / 2 >= xmin &&
-                Cube.y - Cube.d / 2 <= ymax && Cube.y + Cube.d / 2 >= ymin) {
-                if (Cube.x >= (xmin + xmax) / 2) {
-                    Cube.x = xmax + Cube.d / 2
-                }
-                else {
-                    Cube.x = xmin - Cube.d / 2
-                }
-                Cube.vx = 0;
+            // Check if the cube and the platform would overlap
+            let overlap_x = x0 <= xmax && x1 >= xmin;
+            let overlap_y = y0 <= ymax && y1 >= ymin;
+
+            if (overlap_x && overlap_y) {
+                return false;
             }
         }
     }
@@ -175,36 +152,53 @@ function update_cube(Cube, level, scene){
         let xmax = bar.position.x + bar.geometry.parameters.width / 2;
         let ymin = bar.position.y - BAR_Y / 2;
         let ymax = bar.position.y + BAR_Y / 2;
-
-        if (Cube.x - Cube.d / 2 <= xmax && Cube.x + Cube.d / 2 >= xmin) {
-            if (Cube.y - Cube.d / 2 <= ymax + EPSILON && Cube.y + Cube.d / 2 >= ymin) {
-                if (Cube.vy <= 0 && Cube.y >= (ymax + ymin) / 2) {
-                    is_on_platform = true;
-                    Cube.y = ymax + Cube.d / 2;
-                } else {
-                    if (is_on_platform === false) {
-                        Cube.y = ymin - Cube.d / 2;
-                        Cube.vy = 0;
-                    }
-                }
-            }
-            else if (Math.max(Cube.y - Cube.d / 2, ymin) <= Math.min(Cube.y + Cube.d / 2, ymax)) {
-                /**if (Cube.vx >= 0) {
-                Cube.x = xmin - Cube.d / 2;
-            }
-                 else if (Cube.vx < 0) {
-                Cube.x = xmax + Cube.d / 2;
-            }
-                 if (Cube.vy >= 0) {
-                Cube.y = ymin - Cube.d / 2;
-            }
-                 else if (Cube.vy < 0) {
-                Cube.y = ymax + Cube.d / 2;
-            }**/
-                Cube.vx = 0;
-                //Cube.vy = 0;
-            }
+        
+        // Check if the cube and the object would overlap
+        let overlap_x = x0 <= xmax && x1 >= xmin;
+        let overlap_y = y0 <= ymax && y1 >= ymin;
+        
+        if (overlap_x && overlap_y) {
+            return false;
         }
+    }
+    
+    return true;
+}
+
+let running_future = false;
+function update_cube(Cube, level, scene){
+    if (Cube.y <= MIN_HEIGHT && (!LOSS && !WIN)) {
+        run_future(Cube, scene, level);
+        running_future = true;
+    }
+    if(running_future){
+        running_Future = run_future_frame(Cube);
+    }
+
+    let is_on_platform = false;
+    
+    if(left_down)
+        Cube.vx = -SPEED;
+    else if(right_down)
+        Cube.vx = SPEED;
+    else
+        Cube.vx = 0;
+    if(up_down){
+        if(Cube.on_platform)
+            Cube.vy = VERTICAL_SPEED;
+    }
+    
+    if(cube_can_move(level, Cube, [Cube.vx, 0], [0, 0.01])){
+       Cube.x += Cube.vx;
+    }else{
+        Cube.vx = 0;
+    }
+    if(cube_can_move(level, Cube, [0, Cube.vy], [0.01, 0])){
+       Cube.y += Cube.vy;
+    }else{
+        if(Cube.vy < 0)
+            is_on_platform = true;
+        Cube.vy = 0;
     }
 
     let portals = level.portals;
@@ -219,7 +213,7 @@ function update_cube(Cube, level, scene){
 
             if (Cube.x - Cube.d / 2 <= xmax && Cube.x + Cube.d / 2 >= xmin &&
                 Cube.y - Cube.d / 2 <= ymax && Cube.y + Cube.d / 2 >= ymin) {
-                if ((Date.now() - START_TIME) >= MIN_INTER_TRAVEL_TIME && TIME_TRAVEL_ENABLED) {
+                if (CURRENT_TIME >= MIN_INTER_TRAVEL_TIME && TIME_TRAVEL_ENABLED) {
                     register_run(Cube);
                 }
             }
@@ -252,13 +246,15 @@ function update_cube(Cube, level, scene){
         Cube.y-Cube.d/2 < ymax && Cube.y + Cube.d/2 > ymin) {
         if (REGISTERED_MOVEMENTS.length === 0 && WIN === false) {
             WIN = true;
-            TIME = START_TIME - Date.now();
+            TIME = START_TIME;
             printCombo(mean_x(level), mean_y(level), 5, 'WINNER', scene, 0x31ffe1);
             Cookies.remove('Level' + level.id);
             Cookies.set('Level' + level.id, 'true');
         }
     }
-
+    
+    
+    CURRENT_TIME++;
 }
 
 function start_game(level){
@@ -286,7 +282,7 @@ function start_game(level){
     // Define cube and set initial position.
     let material = new THREE.MeshPhongMaterial({color: CUBE_COLOR});
     let geometry = new THREE.BoxGeometry(CUBE_EDGE, CUBE_EDGE, CUBE_EDGE);
-    for(let i = 0; i < geometry.faces.length; ++i){
+    for(let i = 0; i < geometry.faces.length; i++){
         geometry.faces[i].color.setHex(Math.random() * 0xaa710d);
     }
     let Cube = {
@@ -306,7 +302,7 @@ function start_game(level){
     Cube.mat.receiveShadow = false;
     scene.add(Cube.mat);
 
-    START_TIME = Date.now();
+    CURRENT_TIME = 0;
     CURRENT_MOVEMENTS.push([Cube.x, Cube.y, Cube.vx, Cube.vy]);
 
     //Add event listeners for cube moving.
