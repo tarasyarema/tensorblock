@@ -272,7 +272,7 @@ function update_cube(Cube, level, scene){
                 else {
                     next_level = level;
                 }
-                setTimeout(start_game, 2000, next_level);
+                setTimeout(destroy_scene_and_start_game, 2000, next_level);
 
                 Cookies.remove('Level' + level.id);
                 Cookies.set('Level' + level.id, 'true');
