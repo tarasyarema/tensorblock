@@ -112,15 +112,20 @@ function create_portal_exit(x, y, color, w, h, d) {
     return exit;
 }
 
+var canvas;
 function setup_level(level) {
-    var back = 0xffd8eb;
-    var scene = new THREE.Scene();
+    let back_r = 0xff;
+    let back_g = 0xd8;
+    let back_b = 0xeb;
+    let back = (back_r << 16) | (back_g << 8) | back_b;
+    var scene = new THREE.Scene(back);
     scene.background = new THREE.Color(back);
 
     var camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 1, 1000);
     camera.position.set(mean_x(level), mean_y(level), CAMERA_Z);
 
     var game = document.getElementById("game");
+    canvas = game;
     var renderer = new THREE.WebGLRenderer({ canvas: game, antialias: true });
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -201,6 +206,13 @@ function setup_level(level) {
                 portal_meshes[i].material.opacity = 1.0;
             }
         }
+        let lvl = 1+REGISTERED_MOVEMENTS.length;
+        console.log(lvl);
+        let r = parseInt(back_r/lvl);
+        let g = parseInt(back_g/lvl);
+        let b = parseInt(back_b/lvl);
+        let color = (r << 16) | (g << 8) | b;
+        scene.background = new THREE.Color(color); 
     };
 
     /*

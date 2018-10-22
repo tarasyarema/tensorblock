@@ -173,11 +173,16 @@ function cube_can_move(level, Cube, v, eps){ // Says if Cube can move v from its
 let running_future = false;
 function update_cube(Cube, level, scene){
     if (Cube.y <= MIN_HEIGHT && (!LOSS && !WIN)) {
-        if(run_future(Cube, scene, level))
+        if(run_future(Cube, scene, level)){
             running_future = true;
+            canvas.classList.add("grayscale");
+        }
     }
     if(running_future){
         running_future = run_future_frame(Cube);
+        if(!running_future){
+            canvas.classList.remove("grayscale");
+        }
     }
 
     let is_on_platform = false;
