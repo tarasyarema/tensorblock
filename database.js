@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
-let mongo_url = process.env.MONGOLAB_URI || 'mongodb://localhost:27017/hack';
+let mongo_url = process.env.NODE_ENV == 'production' 
+                ? process.env.MONGOLAB_URI : 'mongodb://localhost:27017/hack';
 
 console.log("Connected to: " + mongo_url);
 mongoose.connect(mongo_url, { useNewUrlParser: true });

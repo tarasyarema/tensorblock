@@ -4,12 +4,11 @@ var express = require('express');
 var path = require('path');
 var bodyParser = require('body-parser');
 var logger = require('morgan');
-var dotenv = require('dotenv')
 var cookieParser = require('cookie-parser');
 
 var app = express();
 
-dotenv.config();
+require('dotenv').config();
 const db = require('./database.js');
 
 app.engine('html', require('ejs').renderFile);
