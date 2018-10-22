@@ -166,10 +166,12 @@ function setup_level(level) {
     }
 
     // Draw exit.
+    let portal_meshes = [];
     if (level.portals !== null) {
         for (let i=0; i < level.portals.length; i++) {
             let portal = level.portals[i];
-            scene.add(create_portal_exit(portal[0], portal[1], PORTAL_COLOR, PORTAL_X, PORTAL_Y, PORTAL_Z));
+            portal_meshes[i] = create_portal_exit(portal[0], portal[1], PORTAL_COLOR, PORTAL_X, PORTAL_Y, PORTAL_Z);
+            scene.add(portal_meshes[i]);
         }
     }
 
@@ -187,6 +189,19 @@ function setup_level(level) {
     let update_gauss = dinamicPrintCombo(14, -123, -150, "Gauss", scene, 0xff85dc);
     let update_euler = dinamicPrintCombo(-7, 53, -150, "Euler", scene, 0x9eff00);
     let update_wolfram = dinamicPrintCombo(-53, 72, -150, "Wolfram", scene, 0xff9100);
+    
+    let update_portals = function(){
+        for(let i=0; i<portal_meshes.length; i++){
+            var disabled = disabled_portals.indexOf(i) !== -1;
+            if(disabled){
+                portal_meshes[i].material.transparent = true;
+                portal_meshes[i].material.opacity = 0.3;
+            }else{
+                portal_meshes[i].material.transparent = false;
+                portal_meshes[i].material.opacity = 1.0;
+            }
+        }
+    };
 
     /*
     Draw portals.
@@ -220,6 +235,7 @@ function setup_level(level) {
         scene: scene,
         camera: camera,
         renderer: renderer,
+        
         update_blockchain: update_blockchain,
         update_tensorflow: update_tensorflow,
         update_p_adics: update_p_adics,
@@ -229,6 +245,8 @@ function setup_level(level) {
         update_euler: update_euler,
         update_gauss: update_gauss,
         update_erdos: update_erdos,
-        update_wolfram: update_wolfram
+        update_wolfram: update_wolfram,
+        
+        update_portals: update_portals
     };
 }

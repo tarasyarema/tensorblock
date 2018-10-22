@@ -54,6 +54,10 @@ function run_future(Cube, scene, level) {
         return 0;
     }
 
+    // Reenable portal
+    disabled_portals.pop();
+    updated_portals = true;
+    
     // Get last registered movement. 
     last_movements = REGISTERED_MOVEMENTS.pop();
     console.log(last_movements.length);
