@@ -1,6 +1,5 @@
 var mongoose = require('mongoose');
-let mongo_url = 'mongodb://2pac:ijdbsfaio32r@ds237563.mlab.com:37563/heroku_zk7jdfcw';
-//process.env.MONGOLAB_URI || 'mongodb://localhost:27017/hack';
+let mongo_url = process.env.MONGOLAB_URI || 'mongodb://localhost:27017/hack';
 
 console.log("Connected to: " + mongo_url);
 mongoose.connect(mongo_url, { useNewUrlParser: true });

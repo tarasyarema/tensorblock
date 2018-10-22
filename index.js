@@ -1,19 +1,20 @@
 // import tensorflow										;
 // import blockchain										;
-const db = require('./database.js');
 var express = require('express');
 var path = require('path');
 var bodyParser = require('body-parser');
-var dotenv = require('dotenv');
 var logger = require('morgan');
+var dotenv = require('dotenv')
 var cookieParser = require('cookie-parser');
 
 var app = express();
 
+dotenv.config();
+const db = require('./database.js');
+
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
-dotenv.load();
 app.set('port', process.env.PORT || 3000);
 app.use(express.static(path.join(__dirname, 'static')));
 app.set('views', path.join(__dirname, 'views'));
