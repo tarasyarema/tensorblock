@@ -41,7 +41,7 @@ function key_down_up(Cube) {
 
 function destroy_scene_and_start_game(level) {
     location.reload();
-    start_game(level)
+    start_game(level);
 }
 
 /**
@@ -276,10 +276,13 @@ function update_cube(Cube, level, scene){
                 else {
                     next_level = level;
                 }
-                setTimeout(destroy_scene_and_start_game, 2000, next_level);
-
                 Cookies.remove('Level' + level.id);
                 Cookies.set('Level' + level.id, 'true');
+                Cookies.set('level', next_level.id);
+
+                console.log(Cookies.get());
+
+                setTimeout(destroy_scene_and_start_game, 2000, next_level);
             }
             else {
                 LOSS = true;

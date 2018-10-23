@@ -35,13 +35,12 @@ app.get('/', (req, res) => {
 });
 
 app.get('/game', (req, res) => {
+    console.log("Current cookies are:");
     console.log(req.cookies);
     if (req.cookies.level == undefined)
         res.redirect('/level')
     else
-        res.render('game_node', {
-            level: req.cookies.level
-        });
+        res.render('game_node');
 });
 
 app.get('/level', (req, res) => {

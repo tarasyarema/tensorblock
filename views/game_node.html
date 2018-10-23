@@ -64,11 +64,11 @@
             
 <div class="container">
     <canvas id="game"></canvas>
-    <% var lvl = level;%>
 </div>
 
 <script>
-    const id = <%= lvl %>;
+    const id = parseInt(Cookies.get('level'));
+    console.log("The current level is: %d", id);
     const levels = [ level0, level1, level2, level3 , level4, level5 ];
     $('#stage').append('<b>Level ' + String(id) + '</b>');
     start_game(levels[id]);
