@@ -27,7 +27,44 @@ node index.js
 
 ## Request new levels
 
+Create a new file named `/static/js/levels/file<id>.js`. The format is the next:
 
+```javascript
+const level0 = {
+	"platforms": [[]],
+	"portals": [[]],
+	"exit": [],
+	"init": [],
+	"hor_bar": [],
+	"ver_bar": [],
+	"spikes_lever": [],
+    "id": <id>
+};
+```
+
+### `platforms` : platforms.
+Array of all the platforms in the level. The format of the platform is `[x,y,w]` where `x,y` is the postion of the platform and `w` is the width.
+
+### `portals` : temporal portals.
+Same format as `platforms`.
+
+### `exit` : exit (finish) portal.
+The format is `[x,y]` of the position.
+
+### `init` : initial position.
+Same format as `exit`.
+
+### `hor_bar` : horizontal bars.
+Array of the horizontal bars that can be moved by the player. Same format as `platforms`.
+
+### `ver_bar` : vertical bars.
+Array of the vertical bars that can be moved by the player. Same format as `platforms`.
+
+### `spikes_lever` : `null`
+Array of the spike platforms. **Not yet implemented**.
+
+### `id` : id of the level.
+It could be any type but currently we are using integers.
 
 ## Dev
 
