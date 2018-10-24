@@ -86,5 +86,5 @@ The game is deployed using Heroku and mLab.
 
 ## TODO
 
-- [ ] Tests for levels [#issue4](https://github.com/tarasyarema/tensorblock/issues/3)
+- [ ] Tests for levels [#issue3](https://github.com/tarasyarema/tensorblock/issues/3)
 - [ ] Level maker/editor [#issue4](https://github.com/tarasyarema/tensorblock/issues/4)
