@@ -19,7 +19,6 @@ sudo service mongod start
 mongod --db_path=data
 ```
 
-
 3. Run the app. By default the server is listening on port 3000. Go to [http://localhost:3000](http://localhost:3000) to test the app in your browser.
 ```
 node index.js
@@ -30,7 +29,7 @@ node index.js
 Create a new file named `/static/js/levels/file<id>.js`. The format is the next:
 
 ```javascript
-const level0 = {
+const level<id> = {
 	"platforms": [[]],
 	"portals": [[]],
 	"exit": [],
@@ -38,7 +37,7 @@ const level0 = {
 	"hor_bar": [],
 	"ver_bar": [],
 	"spikes_lever": [],
-    "id": <id>
+    	"id": <id>
 };
 ```
 
@@ -66,6 +65,8 @@ Array of the spike platforms. **Not yet implemented**.
 ### `id` : id of the level.
 It could be any type but currently we are using integers.
 
+We are working on creating some test for new levels. Before that we will check them manually and then merge them to master.
+
 ## Dev
 
 ### The `.env` file
@@ -75,7 +76,15 @@ MONGOLAB_URI=mongod://<user>:<password>@host:port/database_name
 NODE_ENV=development
 ```
 If you set the variable `NODE_ENV=production` the server will use the production database as it uses the page [tensorblock.tech](http://tensorblock.tech).
+```bash
+NODE_ENV=production node index.js
+```
 
 ### Deploy
 
 The game is deployed using Heroku and mLab.
+
+## TODO
+
+[] Tests for levels [#issue4](https://github.com/tarasyarema/tensorblock/issues/3)
+[] Level maker/editor [#issue4](https://github.com/tarasyarema/tensorblock/issues/4)
