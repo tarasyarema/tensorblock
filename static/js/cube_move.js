@@ -1,9 +1,11 @@
 const CUBE_EDGE = 2;
 //const HORIZONTAL_ACC = 0.2;
 const SPEED = 0.4;
-const VERTICAL_SPEED = 1.2;
+const VERTICAL_SPEED = 1.0;
+const JUMP_INITIAL_TIME = 6;
 const MIN_VERTICAL_SPEED = -0.8;
-const GRAVITY = -0.08;
+const FRAMES_TO_JUMP_AFTER_FALLING_PLATFORM = 4;
+const GRAVITY = -0.09;
 const CUBE_COLOR = 0xff710d;
 const MIN_HEIGHT = -100;
 const LEVELS = [level0, level1, level2, level3, level4, level5];
@@ -199,9 +201,14 @@ function update_cube(Cube, level, scene){
     else
         Cube.vx = 0;
     if(up_down){
-        if(Cube.on_platform)
+        if(Cube.frames_since_on_platform >= 0 && Cube.frames_since_on_platform < FRAMES_TO_JUMP_AFTER_FALLING_PLATFORM && Cube.frames_since_jump < 0){
             Cube.vy = VERTICAL_SPEED;
+            Cube.frames_since_jump = 0;
+            Cube.frames_since_on_platform = -1;
+        }
     }
+    if(Cube.frames_since_jump >= 0)
+        Cube.frames_since_jump++;
     
     if(cube_can_move(level, Cube, [Cube.vx, 0], [0, 0.01])){
        Cube.x += Cube.vx;
@@ -214,6 +221,7 @@ function update_cube(Cube, level, scene){
         if(Cube.vy < 0)
             is_on_platform = true;
         Cube.vy = 0;
+        Cube.frames_since_jump = -1;
     }
 
     let portals = level.portals;
@@ -240,15 +248,17 @@ function update_cube(Cube, level, scene){
             }
         }
     }
-
-    //Store if the cube is on a platform or not.
-    Cube.on_platform = is_on_platform;
-
-    if (is_on_platform)
+    
+    if(is_on_platform){
+        Cube.frames_since_on_platform = -1;
         Cube.vy = 0;
-    else {
-        Cube.vy += GRAVITY;
-        Cube.vy = Math.min(Cube.vy, VERTICAL_SPEED);
+    }else{
+        Cube.frames_since_on_platform++;
+        if(Cube.frames_since_jump >= 0 && Cube.frames_since_jump < JUMP_INITIAL_TIME){
+            Cube.vy += 0.3*GRAVITY;
+        }else{
+            Cube.vy += GRAVITY;
+        }
         Cube.vy = Math.max(Cube.vy, MIN_VERTICAL_SPEED);
     }
 
@@ -330,7 +340,9 @@ function start_game(level){
         x: level.init[0],
         y: level.init[1] + CUBE_EDGE/2+PLATFORM_Y/2,
         z: 0,
-        on_platform: false,
+        // on_platform == frames_since_on_platform >= 0,
+        frames_since_on_platform: -1,
+        frames_since_jump: -1,
         vx: 0,
         vy: 0,
         vz: 0,
