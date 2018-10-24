@@ -5,8 +5,8 @@
 1. Clone the repo and install the dependencies.
 
 ```
-git clone https://github.com/tarasyarema/hackupc2018fall.git
-cd hackupc2018fall
+git clone https://github.com/tarasyarema/tensorblock.git
+cd tensorblock
 npm install
 ```
 
