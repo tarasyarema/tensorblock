@@ -41,21 +41,8 @@ function mean_y(level) {
     return (max + min) / 2;
 }
 
-function create_platform(x, y, w) {
-    var geometry = new THREE.BoxGeometry(w, PLATFORM_Y, PLATFORM_Z);
-    var material = new THREE.MeshPhongMaterial({ color: PLATFORM_COLOR }); //, vertexColors: THREE.FaceColors });
-    var platform =  new THREE.Mesh(geometry, material);
-    for (var i = 0; i < geometry.faces.length; ++i)
-        geometry.faces[i].color.setHex(Math.random() * PLATFORM_COLOR);
-
-    platform.position.set(x, y, 0);
-    platform.castShadow = true;
-    platform.receiveShadow = false;
-    return platform;
-}
-
-function create_vertical_platform(x, y, w) {
-    var geometry = new THREE.BoxGeometry(PLATFORM_Y, w, PLATFORM_Z);
+function create_platform(x, y, w, t) {
+    var geometry = new THREE.BoxGeometry(w, t, PLATFORM_Z);
     var material = new THREE.MeshPhongMaterial({ color: PLATFORM_COLOR }); //, vertexColors: THREE.FaceColors });
     var platform =  new THREE.Mesh(geometry, material);
     for (var i = 0; i < geometry.faces.length; ++i)
@@ -157,17 +144,8 @@ function setup_level(level) {
         let x = platform[0];
         let y = platform[1];
         let w = platform[2];
-        scene.add(create_platform(x, y, w));
-    }
-
-    if (level.ver_bar !== null) {
-        for (let i = 0; i < level.ver_bar.length; ++i) {
-            let platform = level.ver_bar[i];
-            let x = platform[0];
-            let y = platform[1];
-            let w = platform[2];
-            scene.add(create_vertical_platform(x, y, w));
-        }
+        let t = platform[3];
+        scene.add(create_platform(x, y, w, t));
     }
 
     // Draw exit.

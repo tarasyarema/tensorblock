@@ -1,10 +1,9 @@
 const level3 = {
-	"platforms": [[-20, 15, 10], [10, 15, 10], [-10, 0, 50]],
+	"platforms": [[-20, 15, 10, 1], [10, 15, 10, 1], [-10, 0, 50, 1]],
 	"portals": [[12, 0]],
 	"exit": [13, 15],
 	"init": [-19, 15],
 	"hor_bar": [[10, 2, 2]],
-	"ver_bar": null,
 	"spikes_lever":null,
 	"id": 3
 };

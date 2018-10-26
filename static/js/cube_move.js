@@ -127,8 +127,8 @@ function cube_can_move(level, Cube, v, eps){ // Says if Cube can move v from its
         let platform = platforms[i];
         let xmin = platform[0] - platform[2]/2;
         let xmax = platform[0] + platform[2]/2;
-        let ymax = platform[1] + PLATFORM_Y/2;
-        let ymin = platform[1] - PLATFORM_Y/2;
+        let ymax = platform[1] + platform[3]/2;
+        let ymin = platform[1] - platform[3]/2;
 
         // Check if the cube and the platform would overlap
         let overlap_x = x0 < xmax && x1 > xmin;
@@ -136,25 +136,6 @@ function cube_can_move(level, Cube, v, eps){ // Says if Cube can move v from its
         
         if (overlap_x && overlap_y) {
             return false;
-        }
-    }
-    
-    let ver_platforms = level.ver_bar;
-    if (ver_platforms !== null) {
-        for (let i = 0; i < ver_platforms.length; ++i) {
-            let platform = platforms[i];
-            let xmin = platform[0] - PLATFORM_Y / 2;
-            let xmax = platform[0] + PLATFORM_Y / 2;
-            let ymin = platform[1] - platform[2] / 2;
-            let ymax = platform[1] + platform[2] / 2;
-
-            // Check if the cube and the platform would overlap
-            let overlap_x = x0 <= xmax && x1 >= xmin;
-            let overlap_y = y0 <= ymax && y1 >= ymin;
-
-            if (overlap_x && overlap_y) {
-                return false;
-            }
         }
     }
 

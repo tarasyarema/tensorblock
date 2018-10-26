@@ -80,7 +80,7 @@ function run_future(Cube, scene, level) {
 function run_future_frame(Cube){
     let time_delta = last_movements[next_last_movement][0];
     while(time_delta == CURRENT_TIME){
-        last_movements[next_last_movement][1]();
+        last_movements[next_last_movement][1](Cube);
         next_last_movement++;
         if(next_last_movement == last_movements.length){
             enable_event_listener(Cube);
