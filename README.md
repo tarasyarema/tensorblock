@@ -73,9 +73,10 @@ We are working on creating some test for new levels. Before that we will check t
 
 ```
 MONGOLAB_URI=mongod://<user>:<password>@host:port/database_name
-NODE_ENV=development
+NODE_ENV=<state>
 ```
-If you set the variable `NODE_ENV=production` the server will use the production database as it uses the page [tensorblock.tech](http://tensorblock.tech).
+If `NODE_ENV=development` the server will use a `mongodb://localhost:27017/hack` database, so you should have a mongo server running.
+If `NODE_ENV=production` the server will use the production database as it uses the page [tensorblock.tech](http://tensorblock.tech), if you have access to it. 
 ```bash
 NODE_ENV=production node index.js
 ```
