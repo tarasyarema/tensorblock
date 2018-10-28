@@ -41,126 +41,11 @@ function mean_y(level) {
     return (max + min) / 2;
 }
 
-function create_platform(x, y, w, t) {
-    var geometry = new THREE.BoxGeometry(w, t, PLATFORM_Z);
-    var material = new THREE.MeshPhongMaterial({ color: PLATFORM_COLOR }); //, vertexColors: THREE.FaceColors });
-    var platform =  new THREE.Mesh(geometry, material);
-    for (var i = 0; i < geometry.faces.length; ++i)
-        geometry.faces[i].color.setHex(Math.random() * PLATFORM_COLOR);
-
-    platform.position.set(x, y, 0);
-    platform.castShadow = true;
-    platform.receiveShadow = false;
-    return platform;
-}
-
-function create_bar(x, y, w) {
-    var geometry = new THREE.BoxGeometry(w, BAR_Y, BAR_Z);
-    var material = new THREE.MeshPhongMaterial({ color: BAR_COLOR });
-    var bar =  new THREE.Mesh(geometry, material);
-
-    for (var i = 0; i < geometry.faces.length; ++i) 
-        geometry.faces[i].color.setHex(Math.random() * BAR_COLOR);
-
-    bar.position.set(x, y, 0);
-    bar.castShadow = true;
-    bar.receiveShadow = false;
-
-    return bar;
-}
-
-
-/**
-    var geometry = new THREE.BoxGeometry(EXIT_X, EXIT_Y, EXIT_Z);
-    var material = new THREE.MeshPhongMaterial({ color: EXIT_COLOR, vertexColors: THREE.FaceColors });
-    var exit =  new THREE.Mesh(geometry, material);
-    for(var i = 0; i < geometry.faces.length; ++i){
-        geometry.faces[i].color.setHex(Math.random() * EXIT_COLOR);
-    }
-
-    exit.position.set(x, y+EXIT_Y/2+PLATFORM_Y/2, 0);
-    exit.castShadow = true;
-    exit.receiveShadow = false;
-    return exit;
-}**/
-
-function create_portal_exit(x, y, color, w, h, d) {
-    var geometry = new THREE.BoxGeometry(w, h, d);
-    var material = new THREE.MeshPhongMaterial({ color: color });
-    var exit =  new THREE.Mesh(geometry, material);
-
-    for (var i = 0; i < geometry.faces.length; ++i)
-        geometry.faces[i].color.setHex(Math.random() * PORTAL_COLOR);
-
-    exit.position.set(x, y + h / 2 + PLATFORM_Y / 2, 0);
-    exit.castShadow = true;
-    exit.receiveShadow = false;
-
-    return exit;
-}
-
 var canvas;
 function setup_level(level) {
-    let back_r = 0xff;
-    let back_g = 0xd8;
-    let back_b = 0xeb;
-    let back = (back_r << 16) | (back_g << 8) | back_b;
-    var scene = new THREE.Scene(back);
-    scene.background = new THREE.Color(back);
+    canvas = document.getElementById("game");
 
-    var camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 1, 1000);
-    camera.position.set(mean_x(level), mean_y(level), CAMERA_Z);
-
-    var game = document.getElementById("game");
-    canvas = game;
-    var renderer = new THREE.WebGLRenderer({ canvas: game, antialias: true });
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.shadowMap.Enabled = true;
-    renderer.shadowMapSoft = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-
-    document.body.appendChild(renderer.domElement);
-
-    // Setup lights!
-    var lights = {
-        directional_1: new THREE.DirectionalLight(0xff59ac, 0.2),
-        directional_2: new THREE.DirectionalLight(0x00e1ff, 0.2),
-        ambient: new THREE.AmbientLight(0xe2e2e2)
-    };
-      
-    lights.directional_1.position.set(50, 200, 100);
-    lights.directional_1.castShadow = true;
-    scene.add(lights.directional_1);
-    lights.directional_2.position.set(10, 100, -100);
-    lights.directional_2.castShadow = true;
-    scene.add(lights.directional_2);
-    lights.ambient.castShadow = true;
-    scene.add(lights.ambient);
-
-    // Draw platforms.
-    for (let i = 0; i < level.platforms.length; ++i) {
-        let platform = level.platforms[i];
-        let x = platform[0];
-        let y = platform[1];
-        let w = platform[2];
-        let t = platform[3];
-        scene.add(create_platform(x, y, w, t));
-    }
-
-    // Draw exit.
-    let portal_meshes = [];
-    if (level.portals !== null) {
-        for (let i=0; i < level.portals.length; i++) {
-            let portal = level.portals[i];
-            portal_meshes[i] = create_portal_exit(portal[0], portal[1], PORTAL_COLOR, PORTAL_X, PORTAL_Y, PORTAL_Z);
-            scene.add(portal_meshes[i]);
-        }
-    }
-
-    scene.add(create_portal_exit(level.exit[0], level.exit[1], EXIT_COLOR, EXIT_X, EXIT_Y, EXIT_Z));
-
-
+    /*
     // Draw loles
     let update_blockchain = dinamicPrintCombo(110, 105, -150, "blockchain", scene, 0x412432);
     let update_tensorflow = dinamicPrintCombo(-95, 125, -150, "tensorflow", scene, 0xfe123d);
@@ -171,72 +56,17 @@ function setup_level(level) {
     let update_erdos = dinamicPrintCombo(-117, 15, -150, "Erdos", scene, 0x20ff9a);
     let update_gauss = dinamicPrintCombo(14, -123, -150, "Gauss", scene, 0xff85dc);
     let update_euler = dinamicPrintCombo(-7, 53, -150, "Euler", scene, 0x9eff00);
-    let update_wolfram = dinamicPrintCombo(-53, 72, -150, "Wolfram", scene, 0xff9100);
-    
-    let update_portals = function(){
-        for(let i=0; i<portal_meshes.length; i++){
-            var disabled = disabled_portals.indexOf(i) !== -1;
-            if(disabled){
-                portal_meshes[i].material.transparent = true;
-                portal_meshes[i].material.opacity = 0.3;
-            }else{
-                portal_meshes[i].material.transparent = false;
-                portal_meshes[i].material.opacity = 1.0;
-            }
-        }
-        let lvl = 1+REGISTERED_MOVEMENTS.length;
-        console.log(lvl);
-        let r = parseInt(back_r/lvl);
-        let g = parseInt(back_g/lvl);
-        let b = parseInt(back_b/lvl);
-        let color = (r << 16) | (g << 8) | b;
-        scene.background = new THREE.Color(color); 
-    };
-
-    /*
-    Draw portals.
-    var portal;
-    if (level.portal !== null) {
-        for (var i = 0; i < level.portal.length; ++i) {
-            portal = level.portal[i];
-            x = portal[0];
-            y = portal[1];
-            w = portal[2];
-            scene.add(create_portal(x, y, w));
-        }
-    }
-    */
-
+    let update_wolfram = dinamicPrintCombo(-53, 72, -150, "Wolfram", scene, 0xff9100);*/
     if (level.hor_bar !== null) {
         for (let i = 0; i < level.hor_bar.length; ++i) {
             let portal = level.hor_bar[i];
             x = portal[0];
             y = portal[1];
-            w = portal[2];
-            BAR_SHAPES.push([x, y, w]);
-            let bar = create_bar(x, y, w);
-            scene.add(bar);
-            BARS.push(bar)
+            GRABBABLE_OBJECTS.push([x, y]);
+            BAR_SHAPES.push([x, y, 0]);
         }
     }
-
-
-    return {
-        scene: scene,
-        camera: camera,
-        renderer: renderer,
-        
-        update_blockchain: update_blockchain,
-        update_tensorflow: update_tensorflow,
-        update_p_adics: update_p_adics,
-        update_galois: update_galois,
-        update_hilbert: update_hilbert,
-        update_turing: update_turing,
-        update_euler: update_euler,
-        update_gauss: update_gauss,
-        update_erdos: update_erdos,
-        update_wolfram: update_wolfram,
-        
-        update_portals: update_portals
-    };
+    
+    initWebGL(canvas);
+    doLevelBuffer(level);
 }

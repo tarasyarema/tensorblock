@@ -13,13 +13,7 @@ function register_run(Cube) {
 
     // Reset Grabbable objects.
     for (let i = 0; i < BAR_SHAPES.length; ++i) {
-        let pos = BAR_SHAPES[i];
-        BARS[i].position.x = pos[0];
-        BARS[i].position.y = pos[1];
-        BARS[i].geometry.parameters.width = pos[2];
-        GRABBABLE_OBJECTS[i] = BARS[i];
-        GRABBABLE_OBJECTS[i].material.color.setHex(BAR_COLOR);
-
+        GRABBABLE_OBJECTS[i] = BAR_SHAPES[i];
     }
 
     NON_GRABBABLE_OBJECTS = [];
@@ -37,18 +31,17 @@ function enable_event_listener(Cube) {
 var last_movements = null;
 var next_last_movement;
 var current_future_frame;
-function run_future(Cube, scene, level) {
+function run_future(Cube, level) {
     EVENT_LISTENERS_ENABLED = false;
     TIME_TRAVEL_ENABLED = false;
     if (GRABBED_OBJECT !== null) {
-        scene.remove();
         GRABBED_OBJECT = null;
     }
     CURRENT_TIME = 0;
     //If there are NO registered movements then you are a noob and you have lost.
     if (REGISTERED_MOVEMENTS.length === 0 && LOSS === false && ENABLE_LOSER) {
         LOSS = true;
-        printCombo(mean_x(level), mean_y(level), 5, 'LOSER', scene, 0xffe131);
+        doBigLettersBuffer("Loser", hexToRGB(0xffe131), mean_x(level), mean_y(level), 5);
         setTimeout(destroy_scene_and_start_game, 2000, level);
         return 0;
     }
@@ -63,7 +56,6 @@ function run_future(Cube, scene, level) {
 
     // Get initial position.
     let pos = last_movements[0];
-    Cube.mat.position.set(pos[0], pos[1], 0);
     Cube.x = pos[0];
     Cube.y = pos[1];
     Cube.vx = pos[2];

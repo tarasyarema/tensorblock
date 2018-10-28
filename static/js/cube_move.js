@@ -141,10 +141,10 @@ function cube_can_move(level, Cube, v, eps){ // Says if Cube can move v from its
 
     for (let i = 0; i < NON_GRABBABLE_OBJECTS.length; ++i) {
         let bar = NON_GRABBABLE_OBJECTS[i];
-        let xmin = bar.position.x - bar.geometry.parameters.width / 2;
-        let xmax = bar.position.x + bar.geometry.parameters.width / 2;
-        let ymin = bar.position.y - BAR_Y / 2;
-        let ymax = bar.position.y + BAR_Y / 2;
+        let xmin = bar[0] - 1;
+        let xmax = bar[0] + 1;
+        let ymin = bar[1] - 0.5;
+        let ymax = bar[1] + 0.5;
         
         // Check if the cube and the object would overlap
         let overlap_x = x0 <= xmax && x1 >= xmin;
@@ -159,9 +159,9 @@ function cube_can_move(level, Cube, v, eps){ // Says if Cube can move v from its
 }
 
 let running_future = false;
-function update_cube(Cube, level, scene){
+function update_cube(Cube, level){
     if (Cube.y <= MIN_HEIGHT && (!LOSS && !WIN)) {
-        if(run_future(Cube, scene, level)){
+        if(run_future(Cube, level)){
             running_future = true;
             canvas.classList.add("grayscale");
         }
@@ -243,10 +243,10 @@ function update_cube(Cube, level, scene){
         Cube.vy = Math.max(Cube.vy, MIN_VERTICAL_SPEED);
     }
 
-    Cube.mat.position.set(Cube.x, Cube.y, Cube.z);
+    //Cube.mat.position.set(Cube.x, Cube.y, Cube.z);
 
     if (GRABBED_OBJECT !== null)
-        GRABBED_OBJECT.position.set(Cube.x, Cube.y + Cube.d/2+ BAR_Y/2, Cube.z);
+        GRABBED_OBJECT = [Cube.x, Cube.y + Cube.d/2 + BAR_Y/2];
 
     let exit = level.exit;
     let xmin = exit[0] - EXIT_X/2;
@@ -259,7 +259,7 @@ function update_cube(Cube, level, scene){
         if (REGISTERED_MOVEMENTS.length === 0 && WIN === false && LOSS ===false) {
             if (USED_PAST || level.id === 0) {
                 WIN = true;
-                printCombo(mean_x(level), mean_y(level), 5, 'WINNER', scene, 0x31ffe1);
+                doBigLettersBuffer("Winner", hexToRGB(0x31ffe1), mean_x(level), mean_y(level), 5);
                 let next_level;
                 if (level.id < LEVELS.length - 1){
                     next_level = LEVELS[level.id + 1];
@@ -277,7 +277,7 @@ function update_cube(Cube, level, scene){
             }
             else {
                 LOSS = true;
-                printCombo(mean_x(level), mean_y(level), 5, 'CHEATING BASTARD', scene, 0xff0000);
+                doBigLettersBuffer("Loser", hexToRGB(0xffe131), mean_x(level), mean_y(level), 5);
                 setTimeout(destroy_scene_and_start_game, 2000, level);
             }
         }
@@ -288,36 +288,9 @@ function update_cube(Cube, level, scene){
 }
 
 function start_game(level){
-    // Initializing Scene
-    let aux = setup_level(level);
-    let scene = aux.scene;
-    let camera = aux.camera;
-    let renderer = aux.renderer;
-    let update_blockchain = aux.update_blockchain;
-    let update_tensorflow = aux.update_tensorflow;
-    let update_p_adics = aux.update_p_adics;
-    let update_galois = aux.update_galois;
-    let update_hilbert = aux.update_hilbert;
-    let update_turing = aux.update_turing;
-    let update_euler = aux.update_euler;
-    let update_gauss = aux.update_gauss;
-    let update_erdos = aux.update_erdos;
-    let update_wolfram = aux.update_wolfram;
-    let update_portals = aux.update_portals;
-
-    // Initilize grabbable objects.
-    for (let i = 0; i < BARS.length; i++) {
-        GRABBABLE_OBJECTS[i] = BARS[i];
-    }
-
-    // Define cube and set initial position.
-    let material = new THREE.MeshPhongMaterial({color: CUBE_COLOR});
-    let geometry = new THREE.BoxGeometry(CUBE_EDGE, CUBE_EDGE, CUBE_EDGE);
-    for(let i = 0; i < geometry.faces.length; i++){
-        geometry.faces[i].color.setHex(Math.random() * 0xaa710d);
-    }
+    setup_level(level);
+    
     let Cube = {
-        mat: new THREE.Mesh(geometry, material),
         x: level.init[0],
         y: level.init[1] + CUBE_EDGE/2+PLATFORM_Y/2,
         z: 0,
@@ -328,12 +301,6 @@ function start_game(level){
         vy: 0,
         vz: 0,
         d: CUBE_EDGE };
-
-    //Set initial cube position and make fancy shadowing.
-    Cube.mat.position.set(Cube.x, Cube.y, Cube.z);
-    Cube.mat.castShadow = true;
-    Cube.mat.receiveShadow = false;
-    scene.add(Cube.mat);
 
     CURRENT_TIME = 0;
     CURRENT_MOVEMENTS.push([Cube.x, Cube.y, Cube.vx, Cube.vy]);
@@ -350,31 +317,21 @@ function start_game(level){
     });
 
     window.addEventListener('resize', () => {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
+        resizeWebGL();
     }, false);
 
     // Creating render function.
     let render = function () {
         $('#time').html("<b>Timeline(" + String(-REGISTERED_MOVEMENTS.length) + ')</b>'); // This must be *very* laggy
         requestAnimationFrame(render);
-        update_cube(Cube, level, scene, CUBE_COLOR);
-        update_blockchain();
-        update_tensorflow();
-        update_p_adics();
-        update_galois();
-        update_hilbert();
-        update_turing();
-        update_euler();
-        update_gauss();
-        update_erdos();
-        update_wolfram();
+        update_cube(Cube, level);
+        doPlayerBuffer(Cube);
+        doFloatingLettersBuffer();
         if(updated_portals){
-            update_portals();
+            doPortalsBuffer(level);
             updated_portals = false;
         }
-        renderer.render(scene, camera);
+        drawScene(Cube);
     };
 
     render();

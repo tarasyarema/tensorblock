@@ -37,6 +37,8 @@
 <script type="text/javascript" src="../static/js/pick_up_stuff.js"></script>
 <script type="text/javascript" src="../static/js/cube_move.js"></script>
 <script type="text/javascript" src="../static/js/level_setup.js"></script>
+<script type="text/javascript" src="../static/js/webgl-utils.js"></script>
+<script type="text/javascript" src="../static/js/rendering.js"></script>
 <script type="text/javascript" src="../static/js/letters_printing.js"></script>
 <script type="text/javascript" src="../static/js/temporal_logic.js"></script>
 <script type="text/javascript" src="../static/js/animation/pingu.js"></script>
@@ -44,6 +46,34 @@
 <script type="text/javascript" src="../static/js/animation/clouds.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
 
+<script type="x-shader/x-vertex" id="normalProgramVertexShader">
+uniform mat4 u_matrix;
+uniform vec3 u_ambient_light;
+uniform vec3 u_directional_light_direction;
+uniform vec3 u_directional_light_color;
+    
+attribute vec4 a_position;
+attribute vec3 a_normal;
+attribute vec4 a_color;
+    
+varying vec4 v_color;
+    
+void main(){
+    vec4 p = u_matrix*a_position;
+    p.z *= 0.1;
+    gl_Position = p;
+    v_color = a_color * vec4(u_ambient_light + u_directional_light_color*dot(a_normal, u_directional_light_direction), 1.0);
+}
+</script>
+<script type="x-shader/x-fragment" id="normalProgramFragmentShader">
+precision mediump float;
+
+varying vec4 v_color;
+    
+void main(){
+    gl_FragColor = v_color;
+}
+</script>
 
 </head>
 
