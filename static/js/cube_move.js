@@ -321,8 +321,13 @@ function start_game(level){
     }, false);
 
     // Creating render function.
+    let last_timeline = 9999;
     let render = function () {
-        $('#time').html("<b>Timeline(" + String(-REGISTERED_MOVEMENTS.length) + ')</b>'); // This must be *very* laggy
+        let current_timeline = -REGISTERED_MOVEMENTS.length;
+        if(last_timeline != current_timeline){
+            $('#time').html("<b>Timeline(" + String(current_timeline) + ')</b>'); // This must be *very* laggy
+            last_timeline = current_timeline;
+        }
         requestAnimationFrame(render);
         update_cube(Cube, level);
         doPlayerBuffer(Cube);
